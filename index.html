@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="lo">
 <head>
@@ -10,7 +11,16 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
-        body { font-family: 'Noto Sans Lao', sans-serif; }
+        body { font-family: 'Noto Sans Lao', sans-serif; background-color: #fdf4f1; }
+        
+        /* Custom Colors for Warm/Peach Theme */
+        .text-rose-500 { color: #f43f5e; }
+        .text-rose-600 { color: #e11d48; }
+        .bg-rose-50 { background-color: #fff1f2; }
+        .bg-rose-100 { background-color: #ffe4e6; }
+        .bg-rose-500 { background-color: #f43f5e; }
+        .bg-rose-600 { background-color: #e11d48; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
@@ -19,21 +29,21 @@
         .toast-enter { animation: slideIn 0.3s ease-out forwards; }
         .toast-exit { animation: slideOut 0.3s ease-out forwards; }
         
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #4f46e5; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #f43f5e; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans flex overflow-hidden" style="height: 100dvh;">
+<body class="text-slate-800 font-sans flex overflow-hidden" style="height: 100dvh;">
 
     <!-- ================= 1. ປ່ອງຢ້ຽມ AUTH (Email & Password Login) ================= -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex z-[100] transition-opacity duration-300 overflow-y-auto p-4">
-        <div class="bg-white rounded-[2rem] shadow-2xl p-6 sm:p-8 w-full max-w-sm transform transition-all m-auto">
+        <div class="bg-white rounded-[2rem] shadow-2xl p-6 sm:p-8 w-full max-w-sm transform transition-all m-auto border-t-8 border-rose-400">
             <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-wallet text-3xl"></i>
+                <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm border border-rose-100">
+                    <i class="fa-solid fa-heart text-3xl"></i>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-800" id="auth-title">ເຂົ້າສູ່ລະບົບ</h2>
-                <p class="text-sm text-slate-500 mt-1">Family MoneyTracker</p>
+                <h2 class="text-2xl font-bold text-slate-800" id="auth-title">ຍິນດີຕ້ອນຮັບ</h2>
+                <p class="text-sm text-slate-500 mt-1">ບັນຊີຄອບຄົວທີ່ແສນອົບອຸ່ນ 🏡</p>
             </div>
             
             <form id="auth-form" class="space-y-4">
@@ -44,7 +54,7 @@
                              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                 <i class="fa-solid fa-envelope"></i>
                             </div>
-                            <input type="email" id="login-email" required placeholder="ອີເມວຂອງທ່ານ" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-medium text-slate-700">
+                            <input type="email" id="login-email" required placeholder="ອີເມວຂອງທ່ານ" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none font-medium text-slate-700">
                         </div>
                     </div>
                     <div>
@@ -53,12 +63,12 @@
                              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                 <i class="fa-solid fa-lock"></i>
                             </div>
-                            <input type="password" id="login-password" required placeholder="ລະຫັດຜ່ານ" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none tracking-widest">
+                            <input type="password" id="login-password" required placeholder="ລະຫັດຜ່ານ" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none tracking-widest">
                         </div>
                     </div>
                 </div>
                 
-                <button type="submit" id="auth-btn" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/30 flex justify-center items-center gap-2 mt-4">
+                <button type="submit" id="auth-btn" class="w-full bg-rose-500 text-white font-bold py-3.5 rounded-xl hover:bg-rose-600 transition shadow-lg shadow-rose-500/30 flex justify-center items-center gap-2 mt-4">
                     <span>ເຂົ້າສູ່ລະບົບ</span>
                 </button>
                 
@@ -67,27 +77,9 @@
                 </p>
             </form>
 
-            <!-- ກ່ອງແຈ້ງເຕືອນວິທີແກ້ບັນຫາ Permissions ຂອງ Firebase -->
-            <div id="permission-error-msg" class="hidden mt-6 p-4 bg-rose-50 border border-rose-200 rounded-xl text-sm text-rose-700 text-left shadow-sm">
-                <strong><i class="fa-solid fa-shield-halved"></i> ຖານຂໍ້ມູນບໍ່ອະນຸຍາດໃຫ້ອ່ານ/ຂຽນ</strong><br>
-                <p class="mt-2 text-xs text-rose-600">ກະລຸນາແກ້ໄຂສິດການເຂົ້າເຖິງໃນ Firebase ດັ່ງນີ້:</p>
-                <ol class="list-decimal pl-4 mt-1 text-xs text-rose-600 space-y-1">
-                    <li>ໄປທີ່ Firebase Console > <strong>Firestore Database</strong></li>
-                    <li>ໄປທີ່ແຖບ <strong>Rules</strong></li>
-                    <li>ແກ້ໂຄດດ້ານໃນໃຫ້ເປັນຕາມດ້ານລຸ່ມນີ້ ແລ້ວກົດ <strong>Publish</strong></li>
-                </ol>
-                <div class="mt-3 p-3 bg-white border border-rose-200 rounded text-rose-800 font-mono text-[10px] overflow-x-auto shadow-inner leading-relaxed select-all cursor-pointer" title="ຄຸມດຳເພື່ອທຳການກ໊ອບປີ້">
-rules_version = '2';<br>
-service cloud.firestore {<br>
-&nbsp;&nbsp;match /databases/{database}/documents {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;match /{document=**} {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allow read, write: if request.auth != null;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-&nbsp;&nbsp;}<br>
-}
-                </div>
+            <div id="permission-error-msg" class="hidden mt-6 p-4 bg-orange-50 border border-orange-200 rounded-xl text-sm text-orange-700 text-left shadow-sm">
+                <strong><i class="fa-solid fa-shield-halved"></i> ຖານຂໍ້ມູນບໍ່ອະນຸຍາດໃຫ້ອ່ານ/ຂຽນ</strong>
             </div>
-
         </div>
     </div>
     
@@ -95,10 +87,10 @@ service cloud.firestore {<br>
     <div id="app-layout" class="hidden w-full h-full flex flex-col md:flex-row relative">
         
         <!-- Sidebar (Desktop) -->
-        <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col z-10">
-            <div class="h-16 flex items-center justify-between px-6 border-b border-slate-100">
-                <div class="flex items-center gap-3 text-indigo-600">
-                    <i class="fa-solid fa-people-roof text-2xl"></i>
+        <aside class="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col z-10 shadow-sm">
+            <div class="h-16 flex items-center justify-between px-6 border-b border-rose-50 bg-rose-50/30">
+                <div class="flex items-center gap-3 text-rose-500">
+                    <i class="fa-solid fa-house-chimney-heart text-2xl"></i>
                     <span class="font-bold text-lg tracking-wide" id="sidebar-family-code">ບ້ານຂອງພວກເຮົາ</span>
                 </div>
             </div>
@@ -106,54 +98,68 @@ service cloud.firestore {<br>
             <div class="p-4 border-b border-slate-100" id="view-selector-container-d">
                 <label class="block text-xs font-medium text-slate-500 mb-1">ມຸມມອງປັດຈຸບັນ:</label>
                 <div class="relative">
-                    <select id="user-selector-desktop" onchange="switchView(this.value)" class="w-full pl-3 pr-8 py-2 bg-slate-100 border-none rounded-lg text-sm font-semibold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500 appearance-none cursor-pointer">
+                    <select id="user-selector-desktop" onchange="switchView(this.value)" class="w-full pl-3 pr-8 py-2 bg-rose-50 border-none rounded-lg text-sm font-semibold text-rose-700 outline-none focus:ring-2 focus:ring-rose-400 appearance-none cursor-pointer">
                         <option value="family">👨‍👩‍👧 ເບິ່ງພາບລວມຄອບຄົວ</option>
                     </select>
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-500">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-rose-500">
                         <i class="fa-solid fa-chevron-down text-xs"></i>
                     </div>
                 </div>
             </div>
 
             <!-- ແຈ້ງເຕືອນມຸມມອງລູກ -->
-            <div class="p-4 border-b border-slate-100 hidden bg-indigo-50" id="child-view-notice-d">
-                <p class="text-xs text-indigo-700 font-medium text-center"><i class="fa-solid fa-user-lock"></i> ສະແດງສະເພາະຂໍ້ມູນຂອງທ່ານ</p>
+            <div class="p-4 border-b border-slate-100 hidden bg-rose-50" id="child-view-notice-d">
+                <p class="text-xs text-rose-700 font-medium text-center"><i class="fa-solid fa-user-lock"></i> ສະແດງສະເພາະຂໍ້ມູນຂອງທ່ານ</p>
             </div>
 
-            <nav class="flex-1 px-4 py-4 space-y-2">
-                <button onclick="switchPage('dashboard')" id="nav-dashboard" class="w-full nav-item flex items-center gap-3 px-4 py-3 text-indigo-600 bg-indigo-50 rounded-xl font-medium transition">
+            <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto no-scrollbar">
+                <button onclick="switchPage('dashboard')" id="nav-dashboard" class="w-full nav-item flex items-center gap-3 px-4 py-3 text-rose-600 bg-rose-50 rounded-xl font-medium transition">
                     <i class="fa-solid fa-chart-pie w-5"></i> ພາບລວມ
                 </button>
-                <button onclick="switchPage('transactions')" id="nav-transactions" class="w-full nav-item flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-indigo-600 rounded-xl font-medium transition">
+                <button onclick="switchPage('transactions')" id="nav-transactions" class="w-full nav-item flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-rose-50 hover:text-rose-600 rounded-xl font-medium transition">
                     <i class="fa-solid fa-receipt w-5"></i> ລາຍການທັງໝົດ
                 </button>
+
+                <!-- Admin Menu for Parents -->
+                <div id="admin-menu" class="hidden pt-4 mt-2 border-t border-rose-100">
+                    <p class="text-[10px] font-bold text-rose-400 mb-2 px-4 uppercase tracking-wider">ຕັ້ງຄ່າຄອບຄົວ</p>
+                    <button onclick="openMembersModal()" class="w-full flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-rose-50 hover:text-rose-600 rounded-xl font-medium transition text-sm">
+                        <i class="fa-solid fa-users-gear w-5"></i> ຈັດການສະມາຊິກ
+                    </button>
+                    <button onclick="openCategoryModal()" class="w-full flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-rose-50 hover:text-rose-600 rounded-xl font-medium transition text-sm">
+                        <i class="fa-solid fa-layer-group w-5"></i> ຈັດການໝວດໝູ່
+                    </button>
+                </div>
             </nav>
-            <div class="p-4 space-y-2">
-                <button onclick="openModal()" class="w-full bg-indigo-600 text-white rounded-xl py-3 px-4 font-semibold hover:bg-indigo-700 hover:shadow-lg transition flex items-center justify-center gap-2">
+            <div class="p-4 space-y-2 border-t border-slate-100">
+                <button onclick="openModal()" class="w-full bg-rose-500 text-white rounded-xl py-3 px-4 font-semibold hover:bg-rose-600 hover:shadow-lg transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-plus"></i> ບັນທຶກລາຍການ
                 </button>
-                <button onclick="logout()" class="w-full bg-slate-100 text-rose-500 rounded-xl py-3 px-4 font-semibold hover:bg-rose-50 transition flex items-center justify-center gap-2">
+                <button onclick="logout()" class="w-full bg-slate-100 text-slate-500 rounded-xl py-3 px-4 font-semibold hover:bg-slate-200 transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-right-from-bracket"></i> ອອກຈາກລະບົບ
                 </button>
             </div>
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 flex flex-col h-full relative overflow-hidden">
+        <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-transparent">
             
             <!-- Header (Mobile) -->
-            <header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-4 z-10 md:hidden">
-                <div class="flex items-center gap-2 text-rose-500" onclick="logout()">
+            <header class="h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-4 z-10 md:hidden shadow-sm">
+                <div class="flex items-center gap-2 text-slate-400" onclick="logout()">
                     <i class="fa-solid fa-right-from-bracket text-lg"></i>
                 </div>
                 
-                <select id="user-selector-mobile" onchange="switchView(this.value)" class="bg-slate-100 py-1.5 px-3 rounded-lg text-sm font-semibold text-slate-700 outline-none w-40">
+                <select id="user-selector-mobile" onchange="switchView(this.value)" class="bg-rose-50 py-1.5 px-3 rounded-lg text-sm font-semibold text-rose-600 outline-none w-40 border border-rose-100 text-center">
                     <option value="family">👨‍👩‍👧 ລວມຄອບຄົວ</option>
                 </select>
-                 <div id="child-view-notice-m" class="hidden text-sm font-bold text-indigo-700">ບັນຊີຂອງຂ້ອຍ</div>
+                 <div id="child-view-notice-m" class="hidden text-sm font-bold text-rose-600">ບັນຊີຂອງຂ້ອຍ</div>
 
-                <div class="flex gap-2">
-                    <button onclick="openModal()" class="w-9 h-9 bg-indigo-600 text-white rounded-full flex items-center justify-center shadow-md active:scale-95 transition">
+                <div class="flex gap-2 items-center">
+                    <button onclick="openCategoryModal()" id="mobile-admin-btn" class="hidden w-8 h-8 text-rose-400 flex items-center justify-center transition">
+                        <i class="fa-solid fa-gear text-lg"></i>
+                    </button>
+                    <button onclick="openModal()" class="w-9 h-9 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-md active:scale-95 transition">
                         <i class="fa-solid fa-plus text-sm"></i>
                     </button>
                 </div>
@@ -164,7 +170,7 @@ service cloud.firestore {<br>
                 
                 <div id="data-loader" class="hidden flex-col items-center justify-center h-40">
                     <div class="loader mb-3"></div>
-                    <p class="text-slate-500 text-sm mt-2">ກຳລັງຊິງຄ໌ຂໍ້ມູນຈາກ Cloud...</p>
+                    <p class="text-slate-500 text-sm mt-2">ກຳລັງຊິງຄ໌ຂໍ້ມູນ...</p>
                 </div>
 
                 <!-- Dashboard Page -->
@@ -174,8 +180,8 @@ service cloud.firestore {<br>
                             <h1 class="text-2xl font-bold text-slate-800">ພາບລວມການເງິນ</h1>
                             <p class="text-slate-500 text-sm mt-1" id="dashboard-subtitle">ສະແດງຂໍ້ມູນຂອງ: ລວມທັງຄອບຄົວ</p>
                         </div>
-                        <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
-                            <i class="fa-regular fa-calendar text-indigo-500"></i>
+                        <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-rose-100 shadow-sm text-rose-500">
+                            <i class="fa-regular fa-calendar"></i>
                             <input type="month" id="month-filter" onchange="changeMonth(this.value)" class="bg-transparent text-sm font-medium text-slate-700 outline-none cursor-pointer">
                         </div>
                     </div>
@@ -184,26 +190,26 @@ service cloud.firestore {<br>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-5 relative overflow-hidden group">
                             <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ຍອດເງິນຄົງເຫຼືອ</p>
-                            <h3 class="text-xl sm:text-2xl font-bold text-slate-800" id="balance-amount">0.00</h3>
+                            <h3 class="text-xl sm:text-2xl font-bold text-slate-800" id="balance-amount">0</h3>
                         </div>
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-5 relative overflow-hidden group">
                             <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ລາຍຮັບ</p>
-                            <h3 class="text-xl sm:text-2xl font-bold text-emerald-600" id="income-amount">0.00</h3>
+                            <h3 class="text-xl sm:text-2xl font-bold text-emerald-500" id="income-amount">0</h3>
                         </div>
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-5 relative overflow-hidden group">
                             <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ລາຍຈ່າຍ</p>
-                            <h3 class="text-xl sm:text-2xl font-bold text-rose-600" id="expense-amount">0.00</h3>
+                            <h3 class="text-xl sm:text-2xl font-bold text-rose-500" id="expense-amount">0</h3>
                         </div>
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-5 relative overflow-hidden group border-l-4 border-l-orange-400">
                             <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ໜີ້/ຄ້າງຈ່າຍ</p>
-                            <h3 class="text-xl sm:text-2xl font-bold text-orange-600" id="debt-amount">0.00</h3>
+                            <h3 class="text-xl sm:text-2xl font-bold text-orange-500" id="debt-amount">0</h3>
                         </div>
                     </div>
 
                     <!-- ສະຫຼຸບການໃຊ້ຈ່າຍລາຍບຸກຄົນ -->
                     <div id="family-spending-summary" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hidden">
                         <h2 class="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-users text-indigo-500"></i> ໃຜຈ່າຍຫຍັງໄປແດ່ໃນເດືອນນີ້?
+                            <i class="fa-solid fa-users text-rose-400"></i> ໃຜຈ່າຍຫຍັງໄປແດ່ໃນເດືອນນີ້?
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="member-spending-list"></div>
                     </div>
@@ -222,12 +228,12 @@ service cloud.firestore {<br>
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
                             <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-chart-pie text-indigo-500"></i> ສັດສ່ວນລາຍຈ່າຍ
+                                <i class="fa-solid fa-chart-pie text-rose-400"></i> ສັດສ່ວນລາຍຈ່າຍ
                             </h2>
                             <div class="relative h-64 w-full flex justify-center items-center">
                                 <canvas id="expenseChart"></canvas>
                                 <div id="no-chart-data" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-white">
-                                    <i class="fa-solid fa-chart-simple text-3xl mb-2 opacity-50"></i>
+                                    <i class="fa-solid fa-heart-crack text-3xl mb-2 opacity-50 text-rose-200"></i>
                                     <span class="text-sm">ບໍ່ມີຂໍ້ມູນລາຍຈ່າຍ</span>
                                 </div>
                             </div>
@@ -236,9 +242,9 @@ service cloud.firestore {<br>
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col">
                             <div class="flex justify-between items-center mb-4">
                                 <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-                                    <i class="fa-solid fa-clock-rotate-left text-indigo-500"></i> ລາຍການລ່າສຸດ
+                                    <i class="fa-solid fa-clock-rotate-left text-rose-400"></i> ລາຍການລ່າສຸດ
                                 </h2>
-                                <button onclick="switchPage('transactions')" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">ເບິ່ງທັງໝົດ</button>
+                                <button onclick="switchPage('transactions')" class="text-sm text-rose-500 hover:text-rose-600 font-medium">ເບິ່ງທັງໝົດ</button>
                             </div>
                             <ul id="recent-transaction-list" class="space-y-3 flex-1 overflow-y-auto no-scrollbar"></ul>
                         </div>
@@ -257,10 +263,10 @@ service cloud.firestore {<br>
                         <div class="flex-1 overflow-y-auto p-4 sm:p-6 no-scrollbar">
                             <ul id="full-transaction-list" class="space-y-3"></ul>
                             <div id="empty-state" class="text-center py-16 hidden">
-                                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-50 text-slate-300 mb-4">
+                                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-rose-50 text-rose-200 mb-4">
                                     <i class="fa-solid fa-receipt text-3xl"></i>
                                 </div>
-                                <h3 class="text-lg font-medium text-slate-700">ຍັງບໍ່ມີລາຍການ</h3>
+                                <h3 class="text-lg font-medium text-slate-500">ຍັງບໍ່ມີລາຍການ</h3>
                             </div>
                         </div>
                     </div>
@@ -269,9 +275,9 @@ service cloud.firestore {<br>
         </main>
 
         <!-- Mobile Nav -->
-        <nav class="md:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-lg border-t border-slate-200 z-40 pb-safe">
+        <nav class="md:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-lg border-t border-slate-200 z-40 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
             <div class="flex justify-around items-center h-16">
-                <button onclick="switchPage('dashboard')" id="nav-mobile-dashboard" class="nav-mobile-item flex-1 flex flex-col items-center justify-center gap-1 text-indigo-600 transition">
+                <button onclick="switchPage('dashboard')" id="nav-mobile-dashboard" class="nav-mobile-item flex-1 flex flex-col items-center justify-center gap-1 text-rose-500 transition">
                     <i class="fa-solid fa-chart-pie text-xl"></i>
                     <span class="text-[10px] font-medium">ພາບລວມ</span>
                 </button>
@@ -284,13 +290,13 @@ service cloud.firestore {<br>
     </div>
 
     <!-- ================= MODAL: ບັນທຶກລາຍການໃໝ່ ================= -->
-    <div id="transaction-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div id="transaction-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4">
         <div id="modal-backdrop" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" onclick="closeModal()"></div>
         
         <div id="modal-content" class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md relative z-10 opacity-0 scale-95 transition-all duration-300 overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white z-20">
-                <h2 class="text-lg font-bold text-slate-800">ບັນທຶກລາຍການ (<span id="modal-user-name"></span>)</h2>
-                <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition">
+            <div class="px-6 py-4 border-b border-rose-50 flex justify-between items-center bg-white z-20">
+                <h2 class="text-lg font-bold text-slate-800">ບັນທຶກລາຍການ (<span id="modal-user-name" class="text-rose-500"></span>)</h2>
+                <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-rose-500 transition">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -300,23 +306,23 @@ service cloud.firestore {<br>
                     <div class="bg-slate-100 p-1 rounded-xl grid grid-cols-2 gap-1 text-sm mb-2" id="type-tabs">
                         <label class="cursor-pointer">
                             <input type="radio" name="type" value="income" class="peer sr-only" onchange="handleTypeChange()">
-                            <div class="text-center py-2 rounded-lg peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-emerald-600 text-slate-500 font-medium transition"><i class="fa-solid fa-plus text-xs mr-1"></i>ລາຍຮັບ</div>
+                            <div class="text-center py-2 rounded-lg peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-emerald-500 text-slate-500 font-medium transition"><i class="fa-solid fa-plus text-xs mr-1"></i>ລາຍຮັບ</div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="type" value="expense" class="peer sr-only" checked onchange="handleTypeChange()">
-                            <div class="text-center py-2 rounded-lg peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-rose-600 text-slate-500 font-medium transition"><i class="fa-solid fa-minus text-xs mr-1"></i>ລາຍຈ່າຍ</div>
+                            <div class="text-center py-2 rounded-lg peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-rose-500 text-slate-500 font-medium transition"><i class="fa-solid fa-minus text-xs mr-1"></i>ລາຍຈ່າຍ</div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="type" value="transfer" class="peer sr-only" onchange="handleTypeChange()">
-                            <div class="text-center py-2 rounded-lg peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-blue-600 text-slate-500 font-medium transition"><i class="fa-solid fa-right-left text-xs mr-1"></i>ໂອນເງິນ</div>
+                            <div class="text-center py-2 rounded-lg peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-blue-500 text-slate-500 font-medium transition"><i class="fa-solid fa-right-left text-xs mr-1"></i>ໂອນເງິນ</div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="type" value="debt" class="peer sr-only" onchange="handleTypeChange()">
-                            <div class="text-center py-2 rounded-lg peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-orange-600 text-slate-500 font-medium transition"><i class="fa-solid fa-file-invoice text-xs mr-1"></i>ຄ້າງຈ່າຍ</div>
+                            <div class="text-center py-2 rounded-lg peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-orange-500 text-slate-500 font-medium transition"><i class="fa-solid fa-file-invoice text-xs mr-1"></i>ຄ້າງຈ່າຍ</div>
                         </label>
                         <label class="cursor-pointer col-span-2 hidden" id="request-tab">
                             <input type="radio" name="type" value="request" class="peer sr-only" onchange="handleTypeChange()">
-                            <div class="text-center py-2 rounded-lg peer-checked:bg-indigo-50 peer-checked:border border-indigo-200 peer-checked:text-indigo-600 text-slate-500 font-medium transition"><i class="fa-solid fa-hand-holding-dollar text-xs mr-1"></i>ຂໍໃຫ້ຈ່າຍໃຫ້ (ລໍຖ້າອະນຸມັດ)</div>
+                            <div class="text-center py-2 rounded-lg peer-checked:bg-amber-50 peer-checked:border border-amber-200 peer-checked:text-amber-600 text-slate-500 font-medium transition"><i class="fa-solid fa-hand-holding-dollar text-xs mr-1"></i>ຂໍໃຫ້ຈ່າຍໃຫ້ (ລໍຖ້າອະນຸມັດ)</div>
                         </label>
                     </div>
 
@@ -324,44 +330,44 @@ service cloud.firestore {<br>
                         <label class="block text-sm font-medium text-slate-700 mb-1">ຈຳນວນເງິນ (ກີບ) *</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">₭</div>
-                            <!-- ອັບເດດໃຫ້ເໝາະກັບເງິນກີບ ທີ່ບໍ່ມັກໃຊ້ທົດສະນິຍົມ -->
-                            <input type="number" id="amount" required min="1" step="1" placeholder="0" class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white outline-none font-semibold text-lg">
+                            <!-- ປ່ຽນ type="text" ເພື່ອໃຫ້ສະແດງຈຸດ (,) ໄດ້ -->
+                            <input type="text" inputmode="numeric" id="amount" required placeholder="0" class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-rose-400 focus:bg-white outline-none font-semibold text-lg">
                         </div>
                         <p id="budget-warning" class="text-xs text-rose-500 mt-1 hidden"><i class="fa-solid fa-triangle-exclamation"></i> ຍອດເງິນຄົງເຫຼືອບໍ່ພໍຈ່າຍ!</p>
                     </div>
 
                     <div id="target-user-container" class="hidden">
                         <label class="block text-sm font-medium text-slate-700 mb-1" id="target-user-label">ເລືອກບຸກຄົນ *</label>
-                        <select id="target-user" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:border-indigo-500 outline-none"></select>
+                        <select id="target-user" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:border-rose-400 outline-none"></select>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div id="category-container">
                             <label class="block text-sm font-medium text-slate-700 mb-1">ໝວດໝູ່ *</label>
-                            <select id="category" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:border-indigo-500 outline-none"></select>
+                            <select id="category" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:border-rose-400 outline-none"></select>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">ວັນທີ *</label>
-                            <input type="date" id="date" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:border-indigo-500 outline-none text-sm">
+                            <input type="date" id="date" required class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:border-rose-400 outline-none text-sm">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">ແນບສະລິບ/ຮູບພາບ</label>
-                        <input type="file" id="receipt-image" accept="image/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100 transition cursor-pointer">
+                        <input type="file" id="receipt-image" accept="image/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-rose-50 file:text-rose-500 hover:file:bg-rose-100 transition cursor-pointer">
                         <div id="image-preview-container" class="hidden mt-2 relative inline-block">
                             <img id="image-preview" src="" class="h-24 rounded-lg object-cover border border-slate-200 shadow-sm">
-                            <button type="button" onclick="clearImage()" class="absolute -top-2 -right-2 w-6 h-6 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-md hover:bg-rose-600 transition"><i class="fa-solid fa-xmark text-xs"></i></button>
+                            <button type="button" onclick="clearImage()" class="absolute -top-2 -right-2 w-6 h-6 bg-slate-800 text-white rounded-full flex items-center justify-center shadow-md hover:bg-black transition"><i class="fa-solid fa-xmark text-xs"></i></button>
                         </div>
-                        <p id="image-compress-status" class="text-xs text-indigo-500 mt-1 hidden"><i class="fa-solid fa-compress"></i> ກຳລັງບີບອັດຂະໜາດ...</p>
+                        <p id="image-compress-status" class="text-xs text-rose-500 mt-1 hidden"><i class="fa-solid fa-compress"></i> ກຳລັງບີບອັດຂະໜາດ...</p>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">ບັນທຶກເພີ່ມເຕີມ</label>
-                        <input type="text" id="note" placeholder="ລາຍລະອຽດ..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:border-indigo-500 outline-none">
+                        <input type="text" id="note" placeholder="ລາຍລະອຽດ..." class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:border-rose-400 outline-none">
                     </div>
 
-                    <button type="submit" id="submit-btn" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl hover:bg-indigo-700 transition shadow-md mt-2 flex justify-center items-center gap-2">
+                    <button type="submit" id="submit-btn" class="w-full bg-rose-500 text-white font-bold py-3 rounded-xl hover:bg-rose-600 transition shadow-md mt-2 flex justify-center items-center gap-2">
                         <span>ບັນທຶກຂໍ້ມູນ</span>
                     </button>
                 </form>
@@ -369,7 +375,76 @@ service cloud.firestore {<br>
         </div>
     </div>
 
-    <div id="toast-container" class="fixed top-5 right-5 z-[60] flex flex-col gap-3 pointer-events-none"></div>
+    <!-- ================= MODAL: ຈັດການໝວດໝູ່ ================= -->
+    <div id="category-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4">
+        <div id="category-backdrop" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" onclick="closeCategoryModal()"></div>
+        
+        <div id="category-content" class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm relative z-10 opacity-0 scale-95 transition-all duration-300 overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white z-20">
+                <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-layer-group text-rose-500 mr-2"></i> ຈັດການໝວດໝູ່</h2>
+                <button onclick="closeCategoryModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-rose-500 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-5 overflow-y-auto no-scrollbar bg-slate-50 flex-1 flex flex-col gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1">ເລືອກປະເພດທີ່ຕ້ອງການແກ້ໄຂ</label>
+                    <select id="cat-manage-type" onchange="renderCategoryManager()" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:border-rose-400 outline-none text-sm font-semibold text-slate-700">
+                        <option value="expense">📉 ໝວດລາຍຈ່າຍ</option>
+                        <option value="income">📈 ໝວດລາຍຮັບ</option>
+                        <option value="debt">📝 ໝວດໜີ້ສິນ</option>
+                    </select>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm">
+                    <ul id="manage-category-list" class="space-y-2 mb-3 max-h-48 overflow-y-auto no-scrollbar">
+                        <!-- ລາຍການຈະຖືກສ້າງດ້ວຍ JS -->
+                    </ul>
+                    
+                    <div class="pt-3 border-t border-slate-100 flex gap-2">
+                        <div class="flex-1 relative">
+                            <input type="text" id="new-cat-name" placeholder="ຊື່ໝວດໝູ່ໃໝ່..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg outline-none text-sm focus:border-rose-400">
+                        </div>
+                        <select id="new-cat-icon" class="w-16 px-1 py-2 bg-slate-50 border border-slate-200 rounded-lg outline-none text-sm text-center cursor-pointer">
+                            <option value="fa-star">⭐</option>
+                            <option value="fa-heart">❤️</option>
+                            <option value="fa-utensils">🍽️</option>
+                            <option value="fa-car">🚗</option>
+                            <option value="fa-bag-shopping">🛍️</option>
+                            <option value="fa-house">🏠</option>
+                            <option value="fa-baby">👶</option>
+                            <option value="fa-paw">🐾</option>
+                            <option value="fa-gamepad">🎮</option>
+                            <option value="fa-bolt">⚡</option>
+                            <option value="fa-circle-plus">➕</option>
+                        </select>
+                        <button onclick="addCategory()" class="bg-rose-500 hover:bg-rose-600 text-white px-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: ຈັດການສະມາຊິກ ================= -->
+    <div id="members-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4">
+        <div id="members-backdrop" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" onclick="closeMembersModal()"></div>
+        
+        <div id="members-content" class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm relative z-10 opacity-0 scale-95 transition-all duration-300 overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white z-20">
+                <h2 class="text-lg font-bold text-slate-800"><i class="fa-solid fa-users-gear text-rose-500 mr-2"></i> ຈັດການສະມາຊິກ</h2>
+                <button onclick="closeMembersModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-rose-500 transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-5 overflow-y-auto no-scrollbar bg-slate-50 flex-1 flex flex-col gap-4">
+                <p class="text-xs text-slate-500 text-center">ກຳນົດສິດທິວ່າໃຜເປັນພໍ່/ແມ່ (ເບິ່ງໄດ້ທຸກຄົນ) ຫຼື ເປັນລູກ (ເບິ່ງໄດ້ແຕ່ຕົນເອງ)</p>
+                <ul id="members-manage-list" class="space-y-3"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed top-5 right-5 z-[80] flex flex-col gap-3 pointer-events-none"></div>
 
     <!-- ================= 3. JAVASCRIPT & FIREBASE ================= -->
     <script type="module">
@@ -377,13 +452,13 @@ service cloud.firestore {<br>
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, getDocs, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // ຕົວແປລະບົບ
         let app, auth, db, appId;
         let txCollection = null;
         let unsubscribeTx = null;
         let unsubscribeUsers = null;
+        let unsubscribeCategories = null;
         
-        const DEFAULT_FAMILY_ID = 'MY_HOME'; // ຄອບຄົວດຽວ
+        const DEFAULT_FAMILY_ID = 'MY_HOME'; 
         let currentFamilyCode = DEFAULT_FAMILY_ID; 
         
         let familyMembers = {}; 
@@ -396,7 +471,8 @@ service cloud.firestore {<br>
         let expenseChartInstance = null;
         let currentPage = 'dashboard';
 
-        const categories = {
+        // หมวดหมู่เริ่มต้น (จะถูกเขียนทับด้วยข้อมูลจาก Firebase ถ้ามี)
+        const defaultCategories = {
             income: [
                 { id: 'salary', name: 'ເງິນເດືອນ/ລາຍໄດ້', icon: 'fa-money-bill-wave' },
                 { id: 'allowance', name: 'ຄ່າເຂົ້າໜົມ', icon: 'fa-piggy-bank' },
@@ -415,8 +491,10 @@ service cloud.firestore {<br>
                 { id: 'pending_bill', name: 'ບິນລໍຖ້າຈ່າຍ', icon: 'fa-file-invoice' }
             ]
         };
+        // หมวดหมู่ที่ใช้จริง
+        let activeCategories = JSON.parse(JSON.stringify(defaultCategories));
 
-        const chartColors = ['#f43f5e', '#ec4899', '#d946ef', '#a855f7', '#3b82f6', '#0ea5e9', '#14b8a6'];
+        const chartColors = ['#f43f5e', '#ec4899', '#d946ef', '#a855f7', '#fb7185', '#fda4af', '#fecdd3'];
 
         const initFirebase = async () => {
              const firebaseConfig = {
@@ -435,7 +513,6 @@ service cloud.firestore {<br>
             auth = getAuth(app);
             db = getFirestore(app);
 
-            // ກວດສອບສະຖານະການເຂົ້າສູ່ລະບົບອັດຕະໂນມັດ
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     try {
@@ -443,14 +520,10 @@ service cloud.firestore {<br>
                         let userDoc = await getDoc(userDocRef);
                         let userData;
                         
-                        // ລະບົບກຳນົດ Role ອັດຕະໂນມັດ!
                         if (!userDoc.exists()) {
-                            // ກວດສອບວ່າມີໃຜຢູ່ໃນບ້ານນີ້ແລ້ວຫຼືຍັງ?
                             const membersSnap = await getDocs(collection(db, 'families', DEFAULT_FAMILY_ID, 'members'));
                             const isFirstUser = membersSnap.empty; 
                             
-                            // ຖ້າເປັນຄົນທຳອິດ -> ເປັນ parent (Super Admin) ທັນທີ
-                            // ຖ້າບໍ່ແມ່ນຄົນທຳອິດ -> ເປັນ child (ລູກ) ທັນທີ
                             userData = {
                                 name: user.email.split('@')[0], 
                                 role: isFirstUser ? 'parent' : 'child',
@@ -458,7 +531,6 @@ service cloud.firestore {<br>
                                 email: user.email
                             };
                             
-                            // ບັນທຶກແລ້ວໃຊ້ຂໍ້ມູນເລີຍ (ບໍ່ຕ້ອງ getDoc ອີກຮອບ ເພື່ອໃຫ້ໄວຂຶ້ນ)
                             await setDoc(userDocRef, userData);
                         } else {
                             userData = userDoc.data();
@@ -476,8 +548,6 @@ service cloud.firestore {<br>
 
                     } catch (e) {
                         console.error("ໂຫຼດຂໍ້ມູນລົ້ມເຫຼວ:", e);
-                        
-                        // ຈັບ Error ຖ້າຖານຂໍ້ມູນບໍ່ອະນຸຍາດໃຫ້ອ່ານ/ຂຽນ
                         if (e.message.includes('Missing or insufficient permissions') || e.code === 'permission-denied') {
                             document.getElementById('permission-error-msg').classList.remove('hidden');
                         } else {
@@ -491,7 +561,6 @@ service cloud.firestore {<br>
             });
         };
 
-        // ຟັງຊັນ Submit ປຸ່ມເຂົ້າສູ່ລະບົບ
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('auth-btn');
@@ -500,37 +569,30 @@ service cloud.firestore {<br>
 
             btn.disabled = true;
             btn.innerHTML = `<div class="loader w-4 h-4 border-white border-t-white/30 inline-block align-middle mr-2"></div> ກຳລັງກວດສອບ...`;
-            
-            // ເຊື່ອງກ່ອງແຈ້ງເຕືອນ Error ຊົ່ວຄາວ
             document.getElementById('permission-error-msg').classList.add('hidden');
 
             try {
-                // ຂັ້ນທີ 1: ລອງເຂົ້າສູ່ລະບົບກ່ອນ
                 await signInWithEmailAndPassword(auth, email, pass);
                 btn.innerHTML = `<div class="loader w-4 h-4 border-white border-t-white/30 inline-block align-middle mr-2"></div> ກຳລັງໂຫຼດຂໍ້ມູນ...`;
-                // showToast("ເຂົ້າສູ່ລະບົບສຳເລັດ", "success");
             } catch (error) {
-                // ຖ້າຕິດ Error auth/invalid-credential ແປວ່າ ອີເມວບໍ່ມີໃນລະບົບ ຫຼື ລະຫັດຜ່ານຜິດ
                 if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
                     try {
                         btn.innerHTML = `<div class="loader w-4 h-4 border-white border-t-white/30 inline-block align-middle mr-2"></div> ກຳລັງສ້າງບັນຊີໃໝ່...`;
-                        // ຂັ້ນທີ 2: ລອງ "ສ້າງບັນຊີໃໝ່" ອັດຕະໂນມັດ
                         await createUserWithEmailAndPassword(auth, email, pass);
                         btn.innerHTML = `<div class="loader w-4 h-4 border-white border-t-white/30 inline-block align-middle mr-2"></div> ກຳລັງໂຫຼດຂໍ້ມູນ...`;
-                        // showToast("ສ້າງບັນຊີໃໝ່ ແລະ ເຂົ້າສູ່ລະບົບຮຽບຮ້ອຍແລ້ວ!", "success");
                     } catch (regError) {
                         if (regError.code === 'auth/email-already-in-use') {
-                            showToast("ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ ກະລຸນາລອງໃໝ່ອີກຄັ້ງ", "danger");
+                            showToast("ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ", "danger");
                         } else if (regError.code === 'auth/weak-password') {
-                            showToast("ລະຫັດຜ່ານສັ້ນເກີນໄປ ຕ້ອງມີຢ່າງໜ້ອຍ 6 ຕົວ", "danger");
+                            showToast("ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 6 ຕົວ", "danger");
                         } else {
-                            showToast("ເຂົ້າສູ່ລະບົບລົ້ມເຫຼວ: " + regError.message, "danger");
+                            showToast("ຜິດພາດ: " + regError.message, "danger");
                         }
                         btn.disabled = false;
                         btn.innerHTML = `<span>ເຂົ້າສູ່ລະບົບ</span>`;
                     }
                 } else {
-                    showToast("ເຂົ້າສູ່ລະບົບລົ້ມເຫຼວ: " + error.message, "danger");
+                    showToast("ຜິດພາດ: " + error.message, "danger");
                     btn.disabled = false;
                     btn.innerHTML = `<span>ເຂົ້າສູ່ລະບົບ</span>`;
                 }
@@ -540,6 +602,7 @@ service cloud.firestore {<br>
         window.logout = async function() {
             if (unsubscribeTx) unsubscribeTx();
             if (unsubscribeUsers) unsubscribeUsers();
+            if (unsubscribeCategories) unsubscribeCategories();
             
             currentUserProfile = null;
             familyMembers = {};
@@ -548,25 +611,30 @@ service cloud.firestore {<br>
             await signOut(auth);
         };
 
-        // ລະບົບສິດທິ
         function applyRoleRestrictions() {
             const isChild = currentUserProfile.role === 'child';
             const viewSelectorD = document.getElementById('view-selector-container-d');
             const selectorM = document.getElementById('user-selector-mobile');
             const noticeD = document.getElementById('child-view-notice-d');
             const noticeM = document.getElementById('child-view-notice-m');
+            const adminMenu = document.getElementById('admin-menu');
+            const adminBtnM = document.getElementById('mobile-admin-btn');
 
             if (isChild) {
                 viewSelectorD.classList.add('hidden');
                 selectorM.classList.add('hidden');
                 noticeD.classList.remove('hidden');
                 noticeM.classList.remove('hidden');
+                adminMenu?.classList.add('hidden');
+                adminBtnM?.classList.add('hidden');
                 window.switchView(currentUserProfile.uid);
             } else {
                 viewSelectorD.classList.remove('hidden');
                 selectorM.classList.remove('hidden');
                 noticeD.classList.add('hidden');
                 noticeM.classList.add('hidden');
+                adminMenu?.classList.remove('hidden');
+                adminBtnM?.classList.remove('hidden');
                 window.switchView('family');
             }
         }
@@ -576,7 +644,7 @@ service cloud.firestore {<br>
             setTimeout(() => {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-layout').classList.remove('hidden');
-                window.switchView('family'); 
+                window.switchView(currentUserProfile.role === 'child' ? currentUserProfile.uid : 'family'); 
                 document.getElementById('month-filter').value = currentMonthFilter;
                 document.getElementById('date').value = new Date().toISOString().split('T')[0];
             }, 300);
@@ -597,16 +665,36 @@ service cloud.firestore {<br>
             if (!txCollection) return;
             document.getElementById('data-loader').classList.replace('hidden', 'flex');
 
+            unsubscribeCategories = onSnapshot(doc(db, 'families', currentFamilyCode, 'settings', 'categories'), (docSnap) => {
+                if (docSnap.exists()) {
+                    activeCategories = docSnap.data();
+                } else {
+                    activeCategories = JSON.parse(JSON.stringify(defaultCategories));
+                }
+                const type = document.querySelector('input[name="type"]:checked')?.value || 'expense';
+                updateCategoryOptions(type === 'debt' ? 'debt' : (type === 'income' ? 'income' : 'expense'));
+                if(!document.getElementById('category-modal').classList.contains('hidden')) {
+                    window.renderCategoryManager();
+                }
+            });
+
             unsubscribeUsers = onSnapshot(collection(db, 'families', currentFamilyCode, 'members'), (snap) => {
                 familyMembers = {};
                 snap.forEach(d => { familyMembers[d.id] = { uid: d.id, ...d.data() }; });
+                
+                // Update profile role dynamically if it was changed by admin
+                if (familyMembers[currentUserProfile.uid]) {
+                    if (currentUserProfile.role !== familyMembers[currentUserProfile.uid].role) {
+                        currentUserProfile.role = familyMembers[currentUserProfile.uid].role;
+                        applyRoleRestrictions();
+                    }
+                }
+                
                 if (currentUserProfile.role === 'parent') populateUserDropdowns();
                 updateUI();
-            }, (error) => {
-                console.error(error);
-                if (error.message.includes('Missing or insufficient permissions')) {
-                    document.getElementById('permission-error-msg').classList.remove('hidden');
-                    logout();
+                
+                if(!document.getElementById('members-modal').classList.contains('hidden')) {
+                    window.renderMembersList();
                 }
             });
 
@@ -615,11 +703,6 @@ service cloud.firestore {<br>
                 snapshot.forEach(docSnap => { transactions.push({ firebaseId: docSnap.id, ...docSnap.data() }); });
                 document.getElementById('data-loader').classList.replace('flex', 'hidden');
                 updateUI();
-            }, (error) => {
-                console.error(error);
-                if (!error.message.includes('Missing or insufficient permissions')) {
-                    showToast("ໂຫຼດຂໍ້ມູນລົ້ມເຫຼວ ກະລຸນາລອງໃໝ່", "danger");
-                }
             });
         }
 
@@ -632,7 +715,7 @@ service cloud.firestore {<br>
             
             for (const uid in familyMembers) {
                 const user = familyMembers[uid];
-                const optionHTML = `<option value="${uid}">${user.name}</option>`;
+                const optionHTML = `<option value="${uid}">${user.name} ${user.role === 'parent' ? '(ພໍ່ແມ່)' : ''}</option>`;
                 desktopSelect.insertAdjacentHTML('beforeend', optionHTML);
                 mobileSelect.insertAdjacentHTML('beforeend', optionHTML);
             }
@@ -654,9 +737,40 @@ service cloud.firestore {<br>
             updateUI();
         };
 
+        // Number Formatting Listener
+        document.getElementById('amount').addEventListener('input', function(e) {
+            let val = this.value.replace(/\D/g, ''); // ລຶບໂຕອັກສອນອື່ນທີ່ບໍ່ແມ່ນຕົວເລກ
+            if (val !== '') {
+                this.value = parseInt(val, 10).toLocaleString('en-US'); // ໃສ່ຈຸດ (,)
+            } else {
+                this.value = '';
+            }
+            const type = document.querySelector('input[name="type"]:checked')?.value || 'expense';
+            const numAmount = val ? parseFloat(val) : 0;
+            checkBudget(numAmount, type);
+        });
+
         window.openModal = function() {
-            if (currentView !== currentUserProfile.uid && currentUserProfile.role !== 'parent') { window.switchView(currentUserProfile.uid); }
-            document.getElementById('modal-user-name').textContent = currentUserProfile.name;
+            let targetUid = currentView;
+            if (targetUid === 'family') targetUid = currentUserProfile.uid;
+
+            // ກວດສອບສິດທິການບັນທຶກ: ພໍ່ແມ່ບັນທຶກໃຫ້ພໍ່ແມ່ຄົນອື່ນບໍ່ໄດ້
+            if (currentUserProfile.role === 'parent' && targetUid !== currentUserProfile.uid) {
+                if (familyMembers[targetUid] && familyMembers[targetUid].role === 'parent') {
+                    showToast("ບໍ່ສາມາດບັນທຶກຂໍ້ມູນແທນພໍ່/ແມ່ຄົນອື່ນໄດ້", "danger");
+                    window.switchView(currentUserProfile.uid); // ດີດກັບມາໜ້າຕົນເອງ
+                    return;
+                }
+            }
+
+            // ລູກບັນທຶກໄດ້ແຕ່ຂອງຕົນເອງ
+            if (currentUserProfile.role === 'child' && targetUid !== currentUserProfile.uid) {
+                targetUid = currentUserProfile.uid;
+            }
+
+            window.modalTargetUid = targetUid;
+            const targetName = targetUid === currentUserProfile.uid ? currentUserProfile.name : familyMembers[targetUid].name;
+            document.getElementById('modal-user-name').textContent = targetName;
             
             const m = document.getElementById('transaction-modal');
             m.classList.remove('hidden');
@@ -692,7 +806,14 @@ service cloud.firestore {<br>
             const btn = document.getElementById('submit-btn');
             
             const type = document.querySelector('input[name="type"]:checked').value;
-            const amount = parseFloat(document.getElementById('amount').value);
+            // ເອົາຈຸດ (,) ອອກກ່ອນບັນທຶກເປັນຕົວເລກ
+            const rawAmount = document.getElementById('amount').value.replace(/,/g, '');
+            const amount = parseFloat(rawAmount);
+            
+            if (isNaN(amount) || amount <= 0) {
+                return showToast('ກະລຸນາໃສ່ຈຳນວນເງິນທີ່ຖືກຕ້ອງ', 'danger');
+            }
+
             const date = document.getElementById('date').value;
             const note = document.getElementById('note').value.trim();
             const category = document.getElementById('category').value;
@@ -705,7 +826,8 @@ service cloud.firestore {<br>
             btn.innerHTML = `<div class="loader w-4 h-4 border-white border-t-white/30 mr-2 inline-block align-middle"></div> ກຳລັງບັນທຶກ...`;
             btn.disabled = true;
 
-            const baseTx = { amount, date, note, owner: currentUserProfile.uid, image: currentImageBase64, timestamp: Date.now() };
+            const ownerUid = window.modalTargetUid || currentUserProfile.uid;
+            const baseTx = { amount, date, note, owner: ownerUid, image: currentImageBase64, timestamp: Date.now() };
 
             try {
                 if (type === 'income' || type === 'expense' || type === 'debt') {
@@ -715,7 +837,7 @@ service cloud.firestore {<br>
                     const targetUid = document.getElementById('target-user').value;
                     const linkId = crypto.randomUUID(); 
                     await addDoc(txCollection, { ...baseTx, type: 'transfer_out', target: targetUid, category: 'transfer', status: 'completed', linkId });
-                    await addDoc(txCollection, { amount, date, note, owner: targetUid, type: 'transfer_in', source: currentUserProfile.uid, category: 'transfer', status: 'completed', image: currentImageBase64, timestamp: Date.now(), linkId });
+                    await addDoc(txCollection, { amount, date, note, owner: targetUid, type: 'transfer_in', source: ownerUid, category: 'transfer', status: 'completed', image: currentImageBase64, timestamp: Date.now(), linkId });
                     showToast(`ໂອນເງິນສຳເລັດ`, 'success');
                 } else if (type === 'request') {
                     const targetUid = document.getElementById('target-user').value;
@@ -729,18 +851,137 @@ service cloud.firestore {<br>
             window.closeModal();
         });
 
+        window.openCategoryModal = function() {
+            if (currentUserProfile.role !== 'parent') return;
+            window.renderCategoryManager();
+            const m = document.getElementById('category-modal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            void m.offsetWidth; 
+            document.getElementById('category-backdrop').classList.replace('opacity-0', 'opacity-100');
+            document.getElementById('category-content').classList.replace('opacity-0', 'opacity-100');
+            document.getElementById('category-content').classList.replace('scale-95', 'scale-100');
+        };
+
+        window.closeCategoryModal = function() {
+            document.getElementById('category-backdrop').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('category-content').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('category-content').classList.replace('scale-100', 'scale-95');
+            setTimeout(() => {
+                document.getElementById('category-modal').classList.replace('flex', 'hidden');
+            }, 300);
+        };
+
+        window.renderCategoryManager = function() {
+            const type = document.getElementById('cat-manage-type').value;
+            const list = document.getElementById('manage-category-list');
+            list.innerHTML = '';
+            
+            if (activeCategories[type]) {
+                activeCategories[type].forEach(cat => {
+                    list.innerHTML += `
+                        <li class="flex justify-between items-center bg-white border border-slate-100 p-2 rounded-lg">
+                            <span class="text-sm text-slate-700 font-medium"><i class="fa-solid ${cat.icon} w-5 text-center text-rose-400"></i> ${cat.name}</span>
+                            <button type="button" onclick="deleteCategory('${type}', '${cat.id}')" class="text-slate-300 hover:text-rose-500 transition p-1"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </li>
+                    `;
+                });
+            }
+        };
+
+        window.addCategory = async function() {
+            const type = document.getElementById('cat-manage-type').value;
+            const nameInput = document.getElementById('new-cat-name');
+            const iconInput = document.getElementById('new-cat-icon');
+            
+            const name = nameInput.value.trim();
+            if (!name) return showToast('ກະລຸນາປ້ອນຊື່ໝວດໝູ່', 'danger');
+            
+            const newId = 'cat_' + Date.now();
+            const newCat = { id: newId, name: name, icon: iconInput.value };
+            
+            const updatedCategories = JSON.parse(JSON.stringify(activeCategories));
+            if (!updatedCategories[type]) updatedCategories[type] = [];
+            updatedCategories[type].push(newCat);
+            
+            try {
+                await setDoc(doc(db, 'families', currentFamilyCode, 'settings', 'categories'), updatedCategories);
+                nameInput.value = '';
+                showToast('ເພີ່ມໝວດໝູ່ສຳເລັດ', 'success');
+            } catch (e) { showToast('ເກີດຂໍ້ຜິດພາດໃນການບັນທຶກ', 'danger'); }
+        };
+
+        window.deleteCategory = async function(type, id) {
+            if (activeCategories[type].length <= 1) return showToast('ຕ້ອງມີຢ່າງໜ້ອຍ 1 ໝວດໝູ່', 'danger');
+            const updatedCategories = JSON.parse(JSON.stringify(activeCategories));
+            updatedCategories[type] = updatedCategories[type].filter(c => c.id !== id);
+            try {
+                await setDoc(doc(db, 'families', currentFamilyCode, 'settings', 'categories'), updatedCategories);
+                showToast('ລຶບໝວດໝູ່ແລ້ວ', 'success');
+            } catch (e) { showToast('ເກີດຂໍ້ຜິດພາດ', 'danger'); }
+        };
+
+        window.openMembersModal = function() {
+            if (currentUserProfile.role !== 'parent') return;
+            window.renderMembersList();
+            const m = document.getElementById('members-modal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            void m.offsetWidth; 
+            document.getElementById('members-backdrop').classList.replace('opacity-0', 'opacity-100');
+            document.getElementById('members-content').classList.replace('opacity-0', 'opacity-100');
+            document.getElementById('members-content').classList.replace('scale-95', 'scale-100');
+        };
+
+        window.closeMembersModal = function() {
+            document.getElementById('members-backdrop').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('members-content').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('members-content').classList.replace('scale-100', 'scale-95');
+            setTimeout(() => { document.getElementById('members-modal').classList.replace('flex', 'hidden'); }, 300);
+        };
+
+        window.renderMembersList = function() {
+            const list = document.getElementById('members-manage-list');
+            list.innerHTML = '';
+            Object.values(familyMembers).forEach(member => {
+                const isMe = member.uid === currentUserProfile.uid;
+                list.innerHTML += `
+                    <li class="flex justify-between items-center bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center shrink-0"><i class="fa-solid ${member.icon || 'fa-user'}"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-700">${member.name} ${isMe ? '(ທ່ານ)' : ''}</p>
+                                <p class="text-[10px] text-slate-500">${member.email}</p>
+                            </div>
+                        </div>
+                        <select onchange="changeMemberRole('${member.uid}', this.value)" ${isMe ? 'disabled' : ''} class="text-xs border border-slate-200 bg-slate-50 rounded-lg p-1.5 outline-none focus:border-rose-400 font-medium ${isMe ? 'opacity-50' : ''}">
+                            <option value="parent" ${member.role === 'parent' ? 'selected' : ''}>ພໍ່/ແມ່</option>
+                            <option value="child" ${member.role === 'child' ? 'selected' : ''}>ລູກ</option>
+                        </select>
+                    </li>
+                `;
+            });
+        };
+
+        window.changeMemberRole = async function(uid, newRole) {
+            try {
+                await updateDoc(doc(db, 'families', currentFamilyCode, 'members', uid), { role: newRole });
+                showToast('ປ່ຽນສິດທິສຳເລັດ', 'success');
+            } catch(e) { showToast('ເກີດຂໍ້ຜິດພາດ', 'danger'); }
+        };
+
         window.approveRequest = async function(txId) {
             const tx = transactions.find(t => t.firebaseId === txId);
             if (!tx) return;
             const approverStats = calculateBalances(currentUserProfile.uid);
-            if (tx.amount > approverStats.balance) return showToast(`ຍອດເງິນຂອງທ່ານບໍ່ພໍອະນຸມັດລາຍການນີ້!`, 'danger');
+            if (tx.amount > approverStats.balance) return showToast(`ຍອດເງິນຂອງທ່ານບໍ່ພໍອະນຸມັດ!`, 'danger');
 
             try {
                 const docRef = doc(db, 'families', currentFamilyCode, 'transactions', txId);
                 const ownerName = familyMembers[tx.owner]?.name || 'ສະມາຊິກ';
                 await updateDoc(docRef, { status: 'completed', owner: currentUserProfile.uid, type: 'expense', note: `(ຈ່າຍໃຫ້ ${ownerName}) ${tx.note}` });
                 showToast('ອະນຸມັດ ແລະ ຈ່າຍລາຍການຮຽບຮ້ອຍ', 'success');
-            } catch (e) { showToast('ຜິດພາດໃນການອະນຸມັດ', 'danger'); }
+            } catch (e) { showToast('ຜິດພາດ', 'danger'); }
         };
 
         window.deleteTransaction = async function(id) {
@@ -754,14 +995,14 @@ service cloud.firestore {<br>
                     await deleteDoc(doc(db, 'families', currentFamilyCode, 'transactions', id));
                 }
                 showToast('ລຶບລາຍການແລ້ວ', 'danger');
-            } catch(e) { showToast('ລຶບບໍ່ສຳເລັດ (ທ່ານບໍ່ມີສິດ)', 'danger'); }
+            } catch(e) { showToast('ລຶບບໍ່ສຳເລັດ', 'danger'); }
         };
 
         window.rejectRequest = async function(id) {
             try {
                 await deleteDoc(doc(db, 'families', currentFamilyCode, 'transactions', id));
                 showToast('ປະຕິເສດຄຳຂໍແລ້ວ', 'danger');
-            } catch (e) { showToast('ເກີດຂໍ້ຜິດພາດ', 'danger'); }
+            } catch (e) { showToast('ຜິດພາດ', 'danger'); }
         };
 
         function compressImage(file, maxWidth, maxHeight, quality, callback) {
@@ -771,8 +1012,7 @@ service cloud.firestore {<br>
                 const img = new Image();
                 img.src = event.target.result;
                 img.onload = function () {
-                    let width = img.width;
-                    let height = img.height;
+                    let width = img.width; let height = img.height;
                     if (width > height) { if (width > maxWidth) { height = Math.round((height *= maxWidth / width)); width = maxWidth; } } 
                     else { if (height > maxHeight) { width = Math.round((width *= maxHeight / height)); height = maxHeight; } }
                     const canvas = document.createElement('canvas');
@@ -816,14 +1056,14 @@ service cloud.firestore {<br>
                 categoryContainer.classList.remove('hidden');
                 updateCategoryOptions(type === 'debt' ? 'debt' : type);
                 submitBtn.innerHTML = '<span><i class="fa-solid fa-check"></i> ບັນທຶກຂໍ້ມູນ</span>';
-                submitBtn.className = 'w-full text-white font-bold py-3.5 rounded-xl transition shadow-md mt-2 bg-indigo-600 hover:bg-indigo-700 flex justify-center items-center gap-2';
+                submitBtn.className = 'w-full text-white font-bold py-3.5 rounded-xl transition shadow-md mt-2 bg-rose-500 hover:bg-rose-600 flex justify-center items-center gap-2';
             } else if (type === 'transfer') {
                 targetContainer.classList.remove('hidden');
                 categoryContainer.classList.add('hidden');
                 document.getElementById('target-user-label').textContent = 'ໂອນເງິນໃຫ້ໃຜ?';
                 populateTargetUsers(false);
                 submitBtn.innerHTML = '<span><i class="fa-solid fa-paper-plane"></i> ຢືນຢັນການໂອນເງິນ</span>';
-                submitBtn.className = 'w-full text-white font-bold py-3.5 rounded-xl transition shadow-md mt-2 bg-blue-600 hover:bg-blue-700 flex justify-center items-center gap-2';
+                submitBtn.className = 'w-full text-white font-bold py-3.5 rounded-xl transition shadow-md mt-2 bg-blue-500 hover:bg-blue-600 flex justify-center items-center gap-2';
             } else if (type === 'request') {
                 targetContainer.classList.remove('hidden');
                 categoryContainer.classList.remove('hidden');
@@ -848,7 +1088,9 @@ service cloud.firestore {<br>
         function updateCategoryOptions(type) {
             const select = document.getElementById('category');
             select.innerHTML = '';
-            categories[type].forEach(cat => select.innerHTML += `<option value="${cat.id}">${cat.name}</option>`);
+            if (activeCategories[type]) {
+                activeCategories[type].forEach(cat => select.innerHTML += `<option value="${cat.id}">${cat.name}</option>`);
+            }
         }
 
         function checkBudget(amount, type) {
@@ -862,21 +1104,15 @@ service cloud.firestore {<br>
             return true;
         }
 
-        document.getElementById('amount').addEventListener('input', () => {
-            const type = document.querySelector('input[name="type"]:checked').value;
-            const amount = parseFloat(document.getElementById('amount').value) || 0;
-            checkBudget(amount, type);
-        });
-
         window.changeMonth = function(val) { currentMonthFilter = val; updateUI(); };
         window.switchPage = function(pageId) {
             currentPage = pageId;
             document.querySelectorAll('.page-section').forEach(el => el.classList.replace('block', 'hidden'));
             document.getElementById('page-' + pageId).classList.replace('hidden', 'block');
             
-            document.getElementById('nav-mobile-dashboard').classList.toggle('text-indigo-600', pageId === 'dashboard');
+            document.getElementById('nav-mobile-dashboard').classList.toggle('text-rose-500', pageId === 'dashboard');
             document.getElementById('nav-mobile-dashboard').classList.toggle('text-slate-400', pageId !== 'dashboard');
-            document.getElementById('nav-mobile-transactions').classList.toggle('text-indigo-600', pageId === 'transactions');
+            document.getElementById('nav-mobile-transactions').classList.toggle('text-rose-500', pageId === 'transactions');
             document.getElementById('nav-mobile-transactions').classList.toggle('text-slate-400', pageId !== 'transactions');
             if (pageId === 'dashboard') updateUI();
         };
@@ -923,10 +1159,10 @@ service cloud.firestore {<br>
                 Object.values(familyMembers).forEach(member => {
                     const mEx = transactions.filter(t => t.owner === member.uid && t.status === 'completed' && (t.type === 'expense' || t.type === 'transfer_out') && t.date.startsWith(currentMonthFilter)).reduce((sum, t) => sum + t.amount, 0);
                     memList.innerHTML += `
-                    <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0"><i class="fa-solid ${member.icon || 'fa-user'}"></i></div>
+                    <div class="flex items-center gap-3 p-3 bg-rose-50 rounded-xl border border-rose-100">
+                        <div class="w-10 h-10 rounded-full bg-white text-rose-500 shadow-sm flex items-center justify-center shrink-0"><i class="fa-solid ${member.icon || 'fa-user'}"></i></div>
                         <div>
-                            <p class="text-xs font-medium text-slate-500">${member.name} ຈ່າຍໄປແລ້ວ</p>
+                            <p class="text-xs font-medium text-slate-500">${member.name} ຈ່າຍໄປ</p>
                             <h4 class="font-bold text-slate-800">₭${new Intl.NumberFormat('lo-LA').format(mEx)}</h4>
                         </div>
                     </div>`;
@@ -943,12 +1179,15 @@ service cloud.firestore {<br>
             if (pendingTx.length > 0) {
                 pendingCont.classList.remove('hidden');
                 document.getElementById('pending-requests-list').innerHTML = pendingTx.map(t => {
-                    const cName = categories.expense.find(c => c.id === t.category)?.name || 'ທົ່ວໄປ';
+                    let cName = 'ທົ່ວໄປ';
+                    const foundCat = activeCategories.expense?.find(c => c.id === t.category);
+                    if(foundCat) cName = foundCat.name;
+                    
                     const reqOwner = familyMembers[t.owner]?.name || 'ສະມາຊິກ';
                     const btns = (currentUserProfile.role === 'parent')
                         ? `<button onclick="approveRequest('${t.firebaseId}')" class="bg-emerald-500 text-white p-2 rounded-lg hover:bg-emerald-600 transition"><i class="fa-solid fa-check"></i></button>
                            <button onclick="rejectRequest('${t.firebaseId}')" class="bg-rose-50 text-rose-500 p-2 rounded-lg hover:bg-rose-100 transition"><i class="fa-solid fa-xmark"></i></button>` 
-                        : `<span class="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded font-medium">ລໍຖ້າຜູ້ໃຫຍ່ອະນຸມັດ</span>`;
+                        : `<span class="text-xs text-amber-600 bg-amber-100 px-2 py-1 rounded font-medium">ລໍຖ້າອະນຸມັດ</span>`;
                     
                     return `
                     <li class="bg-white rounded-xl p-3 flex justify-between items-center shadow-sm">
@@ -989,31 +1228,36 @@ service cloud.firestore {<br>
         }
 
         function generateTxHTML(t) {
-            let icon, bgClass, amountColor, sign, prefix = '';
-            const cat = [...categories.income, ...categories.expense, ...categories.debt].find(c => c.id === t.category);
+            let icon = 'fa-circle', bgClass = '', amountColor = '', sign = '', prefix = '';
             
-            if (t.type === 'income') { icon = cat?.icon; bgClass = 'bg-emerald-100 text-emerald-600'; amountColor = 'text-emerald-600'; sign = '+'; }
-            else if (t.type === 'expense') { icon = cat?.icon; bgClass = 'bg-rose-100 text-rose-600'; amountColor = 'text-rose-600'; sign = '-'; }
-            else if (t.type === 'debt') { icon = cat?.icon; bgClass = 'bg-orange-100 text-orange-600'; amountColor = 'text-orange-600'; sign = 'ໜີ້ '; }
+            let catName = 'ທົ່ວໄປ';
+            for (const key in activeCategories) {
+                const found = activeCategories[key]?.find(c => c.id === t.category);
+                if (found) { catName = found.name; icon = found.icon; break; }
+            }
+            
+            if (t.type === 'income') { bgClass = 'bg-emerald-100 text-emerald-600'; amountColor = 'text-emerald-500'; sign = '+'; }
+            else if (t.type === 'expense') { bgClass = 'bg-rose-100 text-rose-600'; amountColor = 'text-rose-500'; sign = '-'; }
+            else if (t.type === 'debt') { bgClass = 'bg-orange-100 text-orange-600'; amountColor = 'text-orange-500'; sign = 'ໜີ້ '; }
             else if (t.type === 'transfer_out') { 
-                icon = 'fa-arrow-right-from-bracket'; bgClass = 'bg-blue-100 text-blue-600'; amountColor = 'text-rose-600'; sign = '-'; 
+                icon = 'fa-arrow-right-from-bracket'; bgClass = 'bg-blue-100 text-blue-600'; amountColor = 'text-rose-500'; sign = '-'; 
                 prefix = `ໂອນໃຫ້ ${familyMembers[t.target]?.name || 'ສະມາຊິກ'}`; 
             }
             else if (t.type === 'transfer_in') { 
-                icon = 'fa-arrow-right-to-bracket'; bgClass = 'bg-blue-100 text-blue-600'; amountColor = 'text-emerald-600'; sign = '+'; 
+                icon = 'fa-arrow-right-to-bracket'; bgClass = 'bg-blue-100 text-blue-600'; amountColor = 'text-emerald-500'; sign = '+'; 
                 prefix = `ຮັບຈາກ ${familyMembers[t.source]?.name || 'ສະມາຊິກ'}`; 
             }
 
-            const displayTitle = prefix || cat?.name || 'ລາຍການ';
+            const displayTitle = prefix || catName;
             const ownerName = familyMembers[t.owner]?.name || 'ສະມາຊິກ';
             const badge = (currentView === 'family' || (currentUserProfile.role === 'parent' && t.owner !== currentUserProfile.uid)) 
-                ? `<span class="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0.5 rounded ml-1">${ownerName}</span>` : '';
+                ? `<span class="bg-rose-50 text-rose-500 border border-rose-100 text-[10px] px-1.5 py-0.5 rounded ml-1 font-medium">${ownerName}</span>` : '';
             const dateStr = new Date(t.date).toLocaleDateString('lo-LA', { day: 'numeric', month: 'short' });
-            const img = t.image ? `<img src="${t.image}" onclick="window.open('${t.image}', '_blank')" class="w-12 h-12 rounded-lg object-cover ml-3 border border-slate-200 shrink-0 cursor-pointer hover:opacity-80 transition">` : '';
+            const img = t.image ? `<img src="${t.image}" onclick="window.open('${t.image}', '_blank')" class="w-12 h-12 rounded-lg object-cover ml-3 border border-slate-200 shrink-0 cursor-pointer hover:opacity-80 transition shadow-sm">` : '';
             const deleteBtn = (t.owner === currentUserProfile?.uid) ? `<button onclick="deleteTransaction('${t.firebaseId}')" class="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-trash text-xs"></i></button>` : '';
 
             return `
-            <li class="bg-white rounded-xl p-3 flex items-center justify-between border border-slate-100 hover:border-slate-200 transition group">
+            <li class="bg-white rounded-xl p-3 flex items-center justify-between border border-slate-100 hover:border-rose-100 hover:shadow-sm transition group">
                 <div class="flex items-center gap-3 overflow-hidden flex-1">
                     <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${bgClass}"><i class="fa-solid ${icon}"></i></div>
                     <div class="min-w-0">
@@ -1042,8 +1286,14 @@ service cloud.firestore {<br>
             document.getElementById('no-chart-data').style.display = 'none';
             const totals = {};
             ex.forEach(t => {
-                const label = t.type === 'transfer_out' ? 'ໂອນເງິນ' : (categories.expense.find(c => c.id === t.category)?.name || 'ອື່ນໆ');
-                totals[label] = (totals[label] || 0) + t.amount;
+                let catName = 'ອື່ນໆ';
+                if (t.type === 'transfer_out') {
+                    catName = 'ໂອນເງິນ';
+                } else {
+                    const found = activeCategories.expense?.find(c => c.id === t.category);
+                    if (found) catName = found.name;
+                }
+                totals[catName] = (totals[catName] || 0) + t.amount;
             });
             const ctx = document.getElementById('expenseChart').getContext('2d');
             if (expenseChartInstance) {
