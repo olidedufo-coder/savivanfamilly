@@ -732,7 +732,20 @@
             ]
         };
         let activeCategories = JSON.parse(JSON.stringify(defaultCategories));
-        const chartColors = ['#f43f5e', '#ec4899', '#d946ef', '#a855f7', '#fb7185', '#fda4af', '#fecdd3'];
+        
+        // ອັບເດດຊຸດສີໃໝ່: ໂທນສີ Rose/Coral ໄລ່ລະດັບຄວາມເຂັ້ມອ່ອນ (ສະບາຍຕາ, ບໍ່ຕັດກັນແຮງ)
+        // ສີທຳອິດ (ເຂັ້ມສຸດ) ສຳລັບລາຍການທີ່ຈ່າຍຫຼາຍສຸດ ໄລ່ລົງໄປຫາສີອ່ອນສຳລັບລາຍການຈ່າຍໜ້ອຍ
+        const chartColors = [
+            '#e11d48', // Rose-600 (Dark)
+            '#f43f5e', // Rose-500
+            '#fb7185', // Rose-400
+            '#fda4af', // Rose-300
+            '#fecdd3', // Rose-200
+            '#ffe4e6', // Rose-100 (Light)
+            '#ff8a65', // Muted Coral
+            '#ffab91', // Light Coral
+            '#ffccbc'  // Very Light Coral
+        ];
 
         const initFirebase = async () => {
              const firebaseConfig = {
@@ -1629,16 +1642,54 @@
                 let html = '<div class="mt-6 border-t border-slate-100 pt-5"><h3 class="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-list-ul text-rose-400"></i> ລາຍລະອຽດການຈ່າຍ (ຈ່າຍຫຍັງຫຼາຍທີ່ສຸດ?)</h3>';
                 sortedTotals.forEach(([name, amount], index) => {
                     const percent = totalExpenseAmount > 0 ? ((amount / totalExpenseAmount) * 100).toFixed(1) : 0;
+                    // ສີໃນ list ຕ້ອງກົງກັບສີໃນກຣາຟ (ອ້າງອີງຕາມ index ທີ່ລຽງລຳດັບແລ້ວ)
                     const color = chartColors[index % chartColors.length];
                     html += `<div class="mb-4"><div class="flex justify-between items-end text-sm mb-1.5"><span class="font-semibold text-slate-700 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: ${color}"></span> ${name}</span><span class="text-slate-600 font-medium">₭${formatMoney(amount)} <span class="text-rose-500 font-bold ml-1 text-[11px] bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded shadow-sm">${percent}%</span></span></div><div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${color}"></div></div></div>`;
                 }); html += '</div>'; breakdownList.innerHTML = html;
             }
 
-            const ctx = document.getElementById('expenseChart').getContext('2d'); const labels = sortedTotals.map(item => item[0]); const data = sortedTotals.map(item => item[1]);
-            if (expenseChartInstance) { expenseChartInstance.data.labels = labels; expenseChartInstance.data.datasets[0].data = data; expenseChartInstance.update();
+            const ctx = document.getElementById('expenseChart').getContext('2d'); 
+            const labels = sortedTotals.map(item => item[0]); 
+            const data = sortedTotals.map(item => item[1]);
+            
+            // ສ້າງ array ຂອງສີໃຫ້ພໍດີກັບຈຳນວນຂໍ້ມູນ
+            const bgColors = data.map((_, i) => chartColors[i % chartColors.length]);
+
+            if (expenseChartInstance) { 
+                expenseChartInstance.data.labels = labels; 
+                expenseChartInstance.data.datasets[0].data = data;
+                expenseChartInstance.data.datasets[0].backgroundColor = bgColors;
+                expenseChartInstance.update();
             } else {
-                expenseChartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: labels, datasets: [{ data: data, backgroundColor: chartColors, borderWidth: 0 }] }, 
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { font: { family: "'Noto Sans Lao'" }, boxWidth: 12 } }, tooltip: { callbacks: { label: function(context) { return ' ' + context.label + ': ₭' + formatMoney(context.parsed); } } } }, cutout: '65%' } 
+                expenseChartInstance = new Chart(ctx, { 
+                    type: 'doughnut', 
+                    data: { 
+                        labels: labels, 
+                        datasets: [{ 
+                            data: data, 
+                            backgroundColor: bgColors, 
+                            borderWidth: 2, // ເພີ່ມຂະໜາດຂອບ
+                            borderColor: '#ffffff', // ເພີ່ມສີຂອບເປັນສີຂາວ ເພື່ອແຍກແຕ່ລະສີໃຫ້ເບິ່ງງ່າຍຂຶ້ນ
+                            hoverOffset: 4 // ເວລາເອົາເມົ້າໄປຊີ້ ໃຫ້ກຣາຟເດັ້ງອອກມາໜ້ອຍໜຶ່ງ
+                        }] 
+                    }, 
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        plugins: { 
+                            legend: { position: 'right', labels: { font: { family: "'Noto Sans Lao'" }, boxWidth: 12, padding: 15 } }, // ເພີ່ມໄລຍະຫ່າງຂອງຊື່
+                            tooltip: { 
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)', // ປ່ຽນພື້ນຫຼັງ tooltip ເປັນສີຂາວ
+                                titleColor: '#1e293b',
+                                bodyColor: '#475569',
+                                borderColor: '#e2e8f0',
+                                borderWidth: 1,
+                                padding: 10,
+                                callbacks: { label: function(context) { return ' ' + context.label + ': ₭' + formatMoney(context.parsed); } } 
+                            } 
+                        }, 
+                        cutout: '65%' // ປັບຄວາມໜາຂອງວົງແຫວນ
+                    } 
                 });
             }
         }
