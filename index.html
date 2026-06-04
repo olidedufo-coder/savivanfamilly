@@ -187,9 +187,9 @@
                             <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-100 shadow-sm text-rose-500">
                                 <i class="fa-regular fa-calendar"></i>
                                 <select id="time-filter" onchange="changeTimeFilter(this.value)" class="bg-transparent text-sm font-medium text-slate-700 outline-none cursor-pointer">
-                                    <option value="today">ມື້ນີ້</option>
+                                    <option value="today" selected>ມື້ນີ້</option>
                                     <option value="week">ອາທິດນີ້</option>
-                                    <option value="month" selected>ເດືອນນີ້</option>
+                                    <option value="month">ເດືອນນີ້</option>
                                     <option value="year">ປີນີ້</option>
                                     <option value="custom_range">ເລືອກຊ່ວງວັນທີ...</option>
                                     <option value="custom">ເລືອກເດືອນສະເພາະ...</option>
@@ -692,7 +692,7 @@
         
         let currentMonthFilter = new Date().toISOString().slice(0, 7);
         let currentDateFilter = new Date().toISOString().split('T')[0];
-        let currentTimeFilter = 'month';
+        let currentTimeFilter = 'today';
         let dashboardStartDate = ''; 
         let dashboardEndDate = '';   
         let currentImageBase64 = null;
