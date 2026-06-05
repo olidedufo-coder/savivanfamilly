@@ -12,7 +12,6 @@
     <style>
         body { font-family: 'Noto Sans Lao', sans-serif; background-color: #fdf4f1; }
         
-        /* Custom Colors for Warm/Peach Theme */
         .text-rose-500 { color: #f43f5e; }
         .text-rose-600 { color: #e11d48; }
         .bg-rose-50 { background-color: #fff1f2; }
@@ -34,6 +33,10 @@
         /* Microphone Pulse Animation */
         @keyframes pulse-ring { 0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); } 100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
         .mic-listening { animation: pulse-ring 2s infinite; background-color: #3b82f6 !important; color: white !important; }
+        
+        /* Modal Popup Animation */
+        @keyframes popUp { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .modal-popup { animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     </style>
 </head>
 <body class="text-slate-800 font-sans flex overflow-hidden" style="height: 100dvh;">
@@ -190,10 +193,10 @@
                 <!-- Dashboard Page -->
                 <div id="page-dashboard" class="page-section max-w-5xl mx-auto space-y-6 block animate-[fadeIn_0.3s_ease-out]">
                     
-                    <!-- NEW: Seen Status Area (Who is online today) -->
-                    <div class="bg-white/60 border border-slate-200/60 rounded-full px-4 py-2 flex items-center justify-between shadow-sm w-fit max-w-full overflow-x-auto">
-                        <span class="text-xs font-semibold text-slate-500 whitespace-nowrap mr-3"><i class="fa-solid fa-eye text-slate-400 mr-1"></i> ເຂົ້າເບິ່ງມື້ນີ້:</span>
-                        <div id="active-members-list" class="flex items-center gap-2">
+                    <!-- NEW: ສະຖານະການອອນລາຍຂອງສະມາຊິກ (Seen Status) -->
+                    <div id="active-members-container" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 mb-4 hidden">
+                        <h3 class="text-xs font-bold text-slate-500 mb-3 flex items-center gap-2"><i class="fa-solid fa-eye text-emerald-500"></i> ສະມາຊິກທີ່ຮັບຊາບຍອດເງິນແລ້ວມື້ນີ້</h3>
+                        <div class="flex gap-4 overflow-x-auto no-scrollbar" id="active-members-list">
                             <!-- Injected by JS -->
                         </div>
                     </div>
@@ -226,7 +229,6 @@
                         <div class="flex flex-wrap items-center gap-2">
                             <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-100 shadow-sm text-rose-500">
                                 <i class="fa-regular fa-calendar"></i>
-                                <!-- Default Changed to today -->
                                 <select id="time-filter" onchange="changeTimeFilter(this.value)" class="bg-transparent text-sm font-medium text-slate-700 outline-none cursor-pointer">
                                     <option value="today" selected>ມື້ນີ້</option>
                                     <option value="week">ອາທິດນີ້</option>
@@ -467,31 +469,6 @@
         </nav>
     </div>
 
-    <!-- ================= MODAL: Daily Welcome Summary ================= -->
-    <div id="daily-welcome-modal" class="fixed inset-0 z-[80] hidden items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm opacity-100 transition-opacity duration-300"></div>
-        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm relative z-10 scale-100 transition-all duration-300 overflow-hidden flex flex-col">
-            <div class="bg-gradient-to-r from-rose-400 to-rose-500 p-6 text-center relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-10 -mt-10"></div>
-                <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mx-auto mb-3 border border-white/30 text-white">
-                    <i class="fa-solid fa-calendar-day text-3xl"></i>
-                </div>
-                <h2 class="text-xl font-bold text-white mb-1">ຍິນດີຕ້ອນຮັບກັບມາ! 👋</h2>
-                <p class="text-rose-100 text-sm">ນີ້ຄືສະຫຼຸບການເຄື່ອນໄຫວໃນຄອບຄົວມື້ນີ້</p>
-            </div>
-            
-            <div class="p-6 bg-white space-y-4" id="daily-welcome-content">
-                <!-- Content injected by JS -->
-            </div>
-            
-            <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-center">
-                <button onclick="document.getElementById('daily-welcome-modal').classList.replace('flex', 'hidden')" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-slate-800/20">
-                    ຮັບຊາບ ແລະ ເລີ່ມໃຊ້ງານ
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- ================= MODAL: ຕັ້ງງົບປະມານ ================= -->
     <div id="budget-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4">
         <div id="budget-backdrop" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" onclick="closeBudgetModal()"></div>
@@ -608,7 +585,7 @@
                         </div>
                         
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1.5">ບັນທຶກເພີ່ມເຕີມ <span class="text-slate-400 font-normal">(AI ຈະຊ່ວຍຈັດໝວດໝູ່ໃຫ້ຕາມສິ່ງທີ່ທ່ານພິມ)</span></label>
+                            <label class="block text-xs font-bold text-slate-500 mb-1.5">ບັນທຶກເພີ່ມເຕີມ <span class="text-slate-400 font-normal">(AI ຈະຊ່ວຍຈັດໝວດໝູ່ໃຫ້)</span></label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"><i class="fa-solid fa-align-left"></i></div>
                                 <input type="text" id="note" placeholder="ຕົວຢ່າງ: ຊື້ເຂົ້າໜົມ..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:border-rose-400 outline-none text-sm">
@@ -720,8 +697,6 @@
         </div>
     </div>
 
-    <div id="toast-container" class="fixed top-5 right-5 z-[80] flex flex-col gap-3 pointer-events-none"></div>
-
     <!-- ================= MODAL: ລາຍລະອຽດລາຍການ (Transaction Details) ================= -->
     <div id="tx-details-modal" class="fixed inset-0 z-[75] hidden items-center justify-center p-4">
         <div id="tx-details-backdrop" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" onclick="closeTxDetailsModal()"></div>
@@ -744,6 +719,59 @@
         </div>
     </div>
 
+    <!-- ================= MODAL: ຢືນຢັນການລຶບ (Confirm Delete) ================= -->
+    <div id="delete-confirm-modal" class="fixed inset-0 z-[85] hidden items-center justify-center p-4">
+        <div id="delete-confirm-backdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm opacity-0 transition-opacity duration-300" onclick="closeDeleteConfirmModal()"></div>
+        
+        <div id="delete-confirm-content" class="bg-white rounded-[2rem] shadow-2xl w-full max-w-xs relative z-10 opacity-0 scale-95 transition-all duration-300 overflow-hidden flex flex-col p-6 text-center border-t-8 border-rose-500">
+            <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm border border-rose-100">
+                <i class="fa-solid fa-triangle-exclamation text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 mb-2">ຢືນຢັນການລຶບ</h3>
+            <p class="text-sm text-slate-500 mb-6">ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການລຶບລາຍການນີ້? (ການກະທຳນີ້ບໍ່ສາມາດແກ້ໄຂໄດ້)</p>
+            <div class="flex gap-3">
+                <button onclick="closeDeleteConfirmModal()" class="flex-1 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition">ຍົກເລີກ</button>
+                <button id="btn-confirm-delete" onclick="executeDeleteTransaction()" class="flex-1 py-3 bg-rose-500 text-white font-bold rounded-xl hover:bg-rose-600 shadow-md shadow-rose-500/30 transition flex items-center justify-center gap-2">ລຶບເລີຍ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: Daily Welcome Notification ================= -->
+    <div id="daily-welcome-modal" class="fixed inset-0 z-[90] hidden items-center justify-center p-4">
+        <div id="daily-welcome-backdrop" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm opacity-0 transition-opacity duration-300 cursor-pointer" onclick="closeDailyWelcomeModal()"></div>
+        
+        <div id="daily-welcome-content" class="bg-white rounded-[2rem] shadow-2xl w-full max-w-sm relative z-10 opacity-0 scale-95 transition-all duration-500 overflow-hidden flex flex-col border-t-8 border-emerald-400">
+            <div class="p-6 text-center">
+                <div class="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner border border-emerald-100">
+                    <i class="fa-solid fa-face-smile-beam text-4xl animate-bounce"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-1" id="daily-welcome-title">ສະບາຍດີ!</h2>
+                <p class="text-sm text-slate-500 mb-5">ນີ້ຄືສະຫຼຸບຍອດການເງິນຂອງຄອບຄົວສຳລັບ <span class="font-bold text-slate-700">ມື້ນີ້</span></p>
+                
+                <div class="bg-slate-50 rounded-xl p-4 space-y-3 mb-6 text-left border border-slate-100">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium text-slate-600 flex items-center gap-2"><i class="fa-solid fa-receipt text-slate-400"></i> ລາຍການທັງໝົດ</span>
+                        <span class="font-bold text-slate-800" id="dw-total-count">0 ລາຍການ</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium text-slate-600 flex items-center gap-2"><i class="fa-solid fa-arrow-down text-emerald-500"></i> ລາຍຮັບເຂົ້າ</span>
+                        <span class="font-bold text-emerald-500" id="dw-income">₭0</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium text-slate-600 flex items-center gap-2"><i class="fa-solid fa-arrow-up text-rose-500"></i> ລາຍຈ່າຍອອກ</span>
+                        <span class="font-bold text-rose-500" id="dw-expense">₭0</span>
+                    </div>
+                </div>
+
+                <button onclick="closeDailyWelcomeModal()" class="w-full bg-emerald-500 text-white font-bold py-3.5 rounded-xl hover:bg-emerald-600 transition shadow-lg shadow-emerald-500/30">
+                    ຮັບຊາບແລ້ວ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed top-5 right-5 z-[100] flex flex-col gap-3 pointer-events-none"></div>
+
     <!-- ================= 3. JAVASCRIPT & FIREBASE ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -753,7 +781,7 @@
         // ==========================================
         // 🚨 ຕັ້ງຄ່າ GEMINI API KEY ສຳລັບ AI 🚨
         // ==========================================
-        const GEMINI_API_KEY = ""; 
+        const GEMINI_API_KEY = "AIzaSyD......."; // <<< ใส่ API KEY ของคุณตรงนี้ก่อนเอาขึ้น Vercel
 
         let app, auth, db, appId;
         let txCollection = null;
@@ -780,6 +808,10 @@
         let currentPage = 'dashboard';
         let selectedTxIdForDetails = null;
         let familyMonthlyBudget = 0; 
+
+        // --- Delete Confirmation State ---
+        let txToDeleteId = null;
+        let isDeletingFromDetails = false;
 
         // --- Filter & Visibility State Variables ---
         let txListTypeFilter = 'all'; 
@@ -834,16 +866,22 @@
                         const userDocRef = doc(db, 'families', DEFAULT_FAMILY_ID, 'members', user.uid);
                         let userDoc = await getDoc(userDocRef);
                         let userData;
+                        const todayStr = new Date().toISOString().split('T')[0];
+
                         if (!userDoc.exists()) {
                             const membersSnap = await getDocs(collection(db, 'families', DEFAULT_FAMILY_ID, 'members'));
                             const isFirstUser = membersSnap.empty; 
-                            userData = { name: user.email.split('@')[0], role: isFirstUser ? 'parent' : 'child', icon: isFirstUser ? 'fa-user-tie' : 'fa-child', email: user.email };
-                        } else { userData = userDoc.data(); }
+                            userData = { name: user.email.split('@')[0], role: isFirstUser ? 'parent' : 'child', icon: isFirstUser ? 'fa-user-tie' : 'fa-child', email: user.email, lastActiveDate: todayStr };
+                            await setDoc(userDocRef, userData);
+                        } else { 
+                            userData = userDoc.data(); 
+                            // Update last active date to today
+                            if (userData.lastActiveDate !== todayStr) {
+                                await updateDoc(userDocRef, { lastActiveDate: todayStr });
+                                userData.lastActiveDate = todayStr;
+                            }
+                        }
                         
-                        // ອັບເດດເວລາຫຼ້າສຸດທີ່ອອນລາຍ (Last Active)
-                        userData.lastActive = new Date().toISOString();
-                        await setDoc(userDocRef, userData, { merge: true });
-
                         currentFamilyCode = DEFAULT_FAMILY_ID;
                         currentUserProfile = { uid: user.uid, ...userData };
                         txCollection = collection(db, 'families', DEFAULT_FAMILY_ID, 'transactions');
@@ -866,18 +904,14 @@
         // ==========================================
         // 🧠 AI FUNCTIONS (Gemini API Integration)
         // ==========================================
-        async function callGemini(prompt, base64Image = null, isJson = false) {
+        async function callGemini(prompt, base64Data = null, mimeType = null, isJson = false) {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
             let contents = [{ role: "user", parts: [{ text: prompt }] }];
             
-            if (base64Image) {
-                try {
-                    const base64Data = base64Image.split(',')[1];
-                    const mimeType = base64Image.split(';')[0].split(':')[1];
-                    contents[0].parts.push({
-                        inlineData: { mimeType: mimeType, data: base64Data }
-                    });
-                } catch(e) { console.error("Invalid image format for AI"); }
+            if (base64Data && mimeType) {
+                contents[0].parts.push({
+                    inlineData: { mimeType: mimeType, data: base64Data }
+                });
             }
 
             const body = { contents: contents };
@@ -913,6 +947,7 @@
             }
         }
 
+        // 1. AI ວິເຄາະສະລິບ (Receipt Scanner)
         window.scanReceiptWithAI = async function() {
             if(!currentImageBase64) return;
             const btn = document.getElementById('btn-scan-receipt');
@@ -923,7 +958,10 @@
             const prompt = `Analyze this receipt image. Extract the total amount and write a very short note (e.g., 'ຊື້ເຄື່ອງຢູ່ປ້ຳ', 'ຄ່າໄຟ'). 
             Return ONLY a valid JSON object without any markdown formatting. Format: {"amount": number, "note": "string"}. If you cannot find an amount, return {"amount": 0, "note": ""}.`;
             
-            const responseText = await callGemini(prompt, currentImageBase64, true);
+            const base64Data = currentImageBase64.split(',')[1];
+            const mimeType = currentImageBase64.split(';')[0].split(':')[1];
+            
+            const responseText = await callGemini(prompt, base64Data, mimeType, true);
             btn.innerHTML = originalHtml;
             btn.disabled = false;
 
@@ -942,6 +980,7 @@
             }
         };
 
+        // 2. AI ຈັດໝວດໝູ່ອັດຕະໂນມັດ (Auto-categorize on Note blur)
         document.getElementById('note').addEventListener('blur', async function(e) {
             const note = this.value.trim();
             if(!note || note.length < 2) return;
@@ -962,7 +1001,7 @@
             Available categories are: {${cats}}. 
             Return a JSON object with a single key "category_id". Do not include any other text or markdown formatting. Example: {"category_id": "food"}`;
 
-            const responseText = await callGemini(prompt, null, true);
+            const responseText = await callGemini(prompt, null, null, true);
             select.classList.remove('bg-amber-50', 'animate-pulse');
             
             if(responseText) {
@@ -978,6 +1017,7 @@
             }
         });
 
+        // 3. AI ຜູ້ຊ່ວຍວິເຄາະການເງິນ (Financial Advisor)
         window.askAIAdvisor = async function() {
             const btn = document.getElementById('ai-advisor-btn');
             const textEl = document.getElementById('ai-advisor-text');
@@ -1020,6 +1060,7 @@
             }
         };
 
+        // 4. ສັ່ງງານດ້ວຍສຽງ (Voice-to-Transaction)
         let mediaRecorder;
         let audioChunks = [];
         let isRecording = false;
@@ -1075,7 +1116,7 @@
             const reader = new FileReader();
             reader.readAsDataURL(audioBlob);
             reader.onloadend = async function() {
-                const base64AudioMessage = reader.result;
+                const base64AudioMessage = reader.result.split(',')[1];
                 
                 const prompt = `Listen to this audio snippet in Lao/Thai language. Parse the spoken text into a financial transaction for a family budget app.
                 Currency is usually LAK (Kip) or THB (Baht).
@@ -1086,7 +1127,7 @@
                 - "note": string (short description of what it is in Lao)
                 If you cannot understand or there is no clear financial amount, return {"error": true}.`;
 
-                const responseText = await callGemini(prompt, base64AudioMessage, true);
+                const responseText = await callGemini(prompt, base64AudioMessage, 'audio/webm', true);
                 stopListeningUI();
 
                 if(responseText) {
@@ -1121,11 +1162,11 @@
         
         window.startVoiceRecording = startVoiceRecording;
         window.stopVoiceRecording = stopVoiceRecording;
-        
         // ==========================================
         // END AI FUNCTIONS
         // ==========================================
 
+        // --- ຟັງຊັນສຳລັບຊ່ອນ/ສະແດງຈຳນວນເງິນ ---
         window.toggleAmountVisibility = function() {
             isAmountHidden = !isAmountHidden;
             localStorage.setItem('familyMoneyTracker_hideAmount', isAmountHidden);
@@ -1146,6 +1187,7 @@
             if (isAmountHidden) return '***';
             return new Intl.NumberFormat('lo-LA').format(amount);
         }
+        // ----------------------------------------
 
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1172,7 +1214,6 @@
             if (unsubscribeCategories) unsubscribeCategories();
             if (unsubscribeSettings) unsubscribeSettings();
             currentUserProfile = null; familyMembers = {}; transactions = [];
-            sessionStorage.removeItem('welcomeShown_' + currentFamilyCode);
             await signOut(auth);
         };
 
@@ -1269,6 +1310,52 @@
             loadTransactions(); 
         }
 
+        // Daily Notification function
+        function showDailyWelcome() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const shownDate = sessionStorage.getItem('welcome_shown_date');
+            
+            // Show only once per day per session
+            if (shownDate !== todayStr) {
+                // Calculate today's stats for family
+                let tCount = 0, tIn = 0, tEx = 0;
+                transactions.forEach(t => {
+                    if (t.status !== 'completed') return;
+                    const txDate = new Date(t.date);
+                    const now = new Date();
+                    const isToday = txDate.getDate() === now.getDate() && txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
+                    
+                    if (isToday) {
+                        if (t.type === 'transfer_in' || t.type === 'transfer_out') return; // Ignore internal transfers for family overview
+                        tCount++;
+                        if (t.type === 'income') tIn += t.amount;
+                        if (t.type === 'expense' || t.type === 'pay_debt') tEx += t.amount;
+                    }
+                });
+
+                document.getElementById('dw-total-count').textContent = `${tCount} ລາຍການ`;
+                document.getElementById('dw-income').textContent = `₭${new Intl.NumberFormat('lo-LA').format(tIn)}`;
+                document.getElementById('dw-expense').textContent = `₭${new Intl.NumberFormat('lo-LA').format(tEx)}`;
+
+                const m = document.getElementById('daily-welcome-modal');
+                m.classList.remove('hidden'); m.classList.add('flex'); void m.offsetWidth;
+                document.getElementById('daily-welcome-backdrop').classList.replace('opacity-0', 'opacity-100');
+                document.getElementById('daily-welcome-content').classList.replace('opacity-0', 'opacity-100');
+                document.getElementById('daily-welcome-content').classList.replace('scale-95', 'scale-100');
+                document.getElementById('daily-welcome-content').classList.add('modal-popup');
+
+                sessionStorage.setItem('welcome_shown_date', todayStr);
+            }
+        }
+
+        window.closeDailyWelcomeModal = function() {
+            document.getElementById('daily-welcome-backdrop').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('daily-welcome-content').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('daily-welcome-content').classList.replace('scale-100', 'scale-95');
+            setTimeout(() => document.getElementById('daily-welcome-modal').classList.replace('flex', 'hidden'), 300);
+        }
+
+        let isInitialLoad = true;
         function loadTransactions() {
             if(unsubscribeTx) unsubscribeTx();
             const q = query(txCollection, orderBy("timestamp", "desc"), limit(fetchLimit));
@@ -1281,12 +1368,11 @@
                 updateUI();
                 if(currentPage === 'transactions') renderTransactionList();
                 
-                // Show Welcome Summary if not shown yet in this session
-                if (!sessionStorage.getItem('welcomeShown_' + currentFamilyCode)) {
-                    showDailyWelcomeSummary();
-                    sessionStorage.setItem('welcomeShown_' + currentFamilyCode, 'true');
+                if (isInitialLoad && transactions.length > 0) {
+                    setTimeout(() => showDailyWelcome(), 500);
+                    isInitialLoad = false;
                 }
-                
+
                 const loadMoreBtn = document.getElementById('load-more-container');
                 if (snapshot.size >= fetchLimit) {
                     loadMoreBtn.classList.remove('hidden');
@@ -1294,45 +1380,6 @@
                     loadMoreBtn.classList.add('hidden');
                 }
             });
-        }
-
-        function showDailyWelcomeSummary() {
-            const todayObj = new Date();
-            let todayIn = 0, todayEx = 0, count = 0;
-            
-            transactions.forEach(t => {
-                if (t.status !== 'completed') return;
-                const txDate = new Date(t.date);
-                if(txDate.getDate() === todayObj.getDate() && txDate.getMonth() === todayObj.getMonth() && txDate.getFullYear() === todayObj.getFullYear()) {
-                    count++;
-                    if (t.type === 'income' || t.type === 'transfer_in') todayIn += t.amount;
-                    if (t.type === 'expense' || t.type === 'transfer_out' || t.type === 'pay_debt') todayEx += t.amount;
-                }
-            });
-
-            const content = document.getElementById('daily-welcome-content');
-            if(count === 0) {
-                content.innerHTML = `<div class="text-center py-4 text-slate-500"><i class="fa-solid fa-mug-hot text-2xl mb-2 text-rose-200"></i><p>ມື້ນີ້ຍັງບໍ່ມີລາຍການຈ່າຍເງິນເທື່ອ</p></div>`;
-            } else {
-                content.innerHTML = `
-                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        <span class="text-sm font-medium text-slate-600">ລາຍການທັງໝົດມື້ນີ້</span>
-                        <span class="font-bold text-slate-800">${count} ລາຍການ</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="p-3 bg-emerald-50 border border-emerald-100 rounded-xl text-center">
-                            <p class="text-[10px] text-emerald-600 font-bold mb-1">ຮັບເຂົ້າ</p>
-                            <p class="font-bold text-emerald-500">₭${formatMoney(todayIn)}</p>
-                        </div>
-                        <div class="p-3 bg-rose-50 border border-rose-100 rounded-xl text-center">
-                            <p class="text-[10px] text-rose-600 font-bold mb-1">ຈ່າຍອອກ</p>
-                            <p class="font-bold text-rose-500">₭${formatMoney(todayEx)}</p>
-                        </div>
-                    </div>`;
-            }
-
-            const m = document.getElementById('daily-welcome-modal');
-            m.classList.remove('hidden'); m.classList.add('flex');
         }
 
         window.loadMoreTransactions = function() {
@@ -1680,6 +1727,112 @@
             });
         };
         window.changeMemberRole = async function(uid, newRole) { try { await updateDoc(doc(db, 'families', currentFamilyCode, 'members', uid), { role: newRole }); showToast('ປ່ຽນສິດທິສຳເລັດ', 'success'); } catch(e) { showToast('ເກີດຂໍ້ຜິດພາດ', 'danger'); } };
+        
+        window.openTxDetails = function(id) {
+            const t = transactions.find(tx => tx.firebaseId === id); if (!t) return; selectedTxIdForDetails = id;
+            const body = document.getElementById('tx-details-body'); const actions = document.getElementById('tx-details-actions');
+            let icon = 'fa-circle', bgClass = '', amountColor = '', sign = '', typeLabel = ''; let catName = 'ທົ່ວໄປ';
+            for (const key in activeCategories) { const found = activeCategories[key]?.find(c => c.id === t.category); if (found) { catName = found.name; icon = found.icon; break; } }
+            
+            if (t.type === 'income') { bgClass = 'bg-emerald-100 text-emerald-600'; amountColor = 'text-emerald-500'; sign = '+'; typeLabel = 'ລາຍຮັບ'; }
+            else if (t.type === 'expense') { bgClass = 'bg-rose-100 text-rose-600'; amountColor = 'text-rose-500'; sign = '-'; typeLabel = 'ລາຍຈ່າຍ'; }
+            else if (t.type === 'debt') { bgClass = 'bg-orange-100 text-orange-600'; amountColor = 'text-orange-500'; sign = 'ໜີ້ເພີ່ມ '; typeLabel = 'ສ້າງໜີ້'; }
+            else if (t.type === 'pay_debt') { icon = 'fa-handshake-angle'; bgClass = 'bg-teal-100 text-teal-600'; amountColor = 'text-teal-500'; sign = '-'; typeLabel = 'ຊຳລະໜີ້'; }
+            else if (t.type === 'transfer_out') { icon = 'fa-arrow-right-from-bracket'; bgClass = 'bg-blue-100 text-blue-600'; amountColor = 'text-rose-500'; sign = '-'; typeLabel = `ໂອນເງິນອອກ`; }
+            else if (t.type === 'transfer_in') { icon = 'fa-arrow-right-to-bracket'; bgClass = 'bg-blue-100 text-blue-600'; amountColor = 'text-emerald-500'; sign = '+'; typeLabel = `ຮັບເງິນໂອນ`; }
+
+            const dateObj = new Date(t.date);
+            const dateStr = dateObj.toLocaleDateString('lo-LA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            let timeStr = "ບໍ່ໄດ້ລະບຸ";
+            if (t.date.includes('T')) timeStr = dateObj.toLocaleTimeString('lo-LA', { hour: '2-digit', minute:'2-digit' });
+            else if (t.timestamp) timeStr = new Date(t.timestamp).toLocaleTimeString('lo-LA', { hour: '2-digit', minute:'2-digit' });
+
+            const ownerName = familyMembers[t.owner]?.name || 'ສະມາຊິກບໍ່ພົບ';
+            let extraInfo = '';
+            if (t.type === 'transfer_out' && t.target) extraInfo = `<div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ຜູ້ຮັບໂອນ</span><span class="text-sm font-semibold text-slate-700">${familyMembers[t.target]?.name || 'ບໍ່ພົບຂໍ້ມູນ'}</span></div>`;
+            else if (t.type === 'transfer_in' && t.source) extraInfo = `<div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ຜູ້ໂອນ</span><span class="text-sm font-semibold text-slate-700">${familyMembers[t.source]?.name || 'ບໍ່ພົບຂໍ້ມູນ'}</span></div>`;
+
+            // --- NEW: ອັບເດດຍອດການເຂົ້າເບິ່ງໃນ Firebase ---
+            const newViewCount = (t.viewCount || 0) + 1;
+            updateDoc(doc(db, 'families', currentFamilyCode, 'transactions', id), { viewCount: newViewCount }).catch(e => console.log(e));
+            t.viewCount = newViewCount; 
+            // ------------------------------------------
+
+            body.innerHTML = `
+                <div class="flex flex-col items-center justify-center mb-6">
+                    <div class="w-16 h-16 rounded-full flex items-center justify-center mb-3 ${bgClass} shadow-sm border border-white"><i class="fa-solid ${icon} text-2xl"></i></div>
+                    <h3 class="text-3xl font-bold ${amountColor}">${sign}${formatMoney(t.amount)}</h3>
+                    <span class="text-xs text-slate-500 mt-1 px-2 py-1 bg-slate-100 rounded-full font-medium">${typeLabel}</span>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-regular fa-calendar"></i></div><div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ວັນທີ</span><span class="text-sm font-semibold text-slate-700">${dateStr}</span></div></div>
+                    <div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-regular fa-clock"></i></div><div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ເວລາ</span><span class="text-sm font-semibold text-slate-700">${timeStr}</span></div></div>
+                    <div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-solid fa-layer-group"></i></div><div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ໝວດໝູ່</span><span class="text-sm font-semibold text-slate-700">${catName}</span></div></div>
+                    <div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-regular fa-user"></i></div><div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ບັນທຶກໂດຍ</span><span class="text-sm font-semibold text-slate-700">${ownerName}</span></div></div>
+                    ${extraInfo}
+                    <div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-blue-500"><i class="fa-solid fa-eye"></i></div><div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ເຂົ້າເບິ່ງແລ້ວ</span><span class="text-sm font-bold text-blue-500">${t.viewCount} ຄັ້ງ</span></div></div>
+                    <div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-solid fa-align-left"></i></div><div class="flex flex-col w-full"><span class="text-[10px] text-slate-400 font-medium">ບັນທຶກເພີ່ມເຕີມ</span><span class="text-sm font-medium text-slate-600 bg-slate-50 p-2 rounded-lg mt-1 w-full border border-slate-100 ${!t.note ? 'italic text-slate-400' : ''}">${t.note || 'ບໍ່ມີບັນທຶກເພີ່ມເຕີມ'}</span></div></div>
+                    ${t.image ? `<div class="flex items-start gap-3 mt-4"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-regular fa-image"></i></div><div class="flex flex-col w-full"><span class="text-[10px] text-slate-400 font-medium mb-1">ຮູບພາບ/ສະລິບ</span><img src="${t.image}" onclick="window.open('${t.image}', '_blank')" class="w-full h-auto rounded-xl border border-slate-200 cursor-pointer hover:opacity-90 transition shadow-sm"></div></div>` : ''}
+                </div>`;
+
+            const txDateForCheck = new Date(t.date); const todayForCheck = new Date();
+            const isEditable = (txDateForCheck.getDate() === todayForCheck.getDate() && txDateForCheck.getMonth() === todayForCheck.getMonth() && txDateForCheck.getFullYear() === todayForCheck.getFullYear());
+
+            let actionHtml = `<button onclick="closeTxDetailsModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-medium transition text-sm">ປິດ</button>`;
+            if (t.owner === currentUserProfile?.uid && isEditable) actionHtml += `<button onclick="confirmDeleteTransaction('${t.firebaseId}', true)" class="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 font-medium transition flex items-center gap-2 shadow-sm text-sm"><i class="fa-solid fa-trash"></i> ລຶບລາຍການນີ້</button>`;
+            else if (t.owner === currentUserProfile?.uid && !isEditable) actionHtml += `<span class="text-xs text-slate-400 font-medium px-2 py-2 flex items-center gap-1"><i class="fa-solid fa-lock"></i> ບໍ່ສາມາດແກ້ໄຂຍ້ອນຫຼັງໄດ້</span>`;
+            actions.innerHTML = actionHtml;
+
+            const m = document.getElementById('tx-details-modal'); m.classList.remove('hidden'); m.classList.add('flex'); void m.offsetWidth; 
+            document.getElementById('tx-details-backdrop').classList.replace('opacity-0', 'opacity-100');
+            document.getElementById('tx-details-content').classList.replace('opacity-0', 'opacity-100');
+            document.getElementById('tx-details-content').classList.replace('scale-95', 'scale-100');
+        };
+
+        window.closeTxDetailsModal = function() {
+            document.getElementById('tx-details-backdrop').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('tx-details-content').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('tx-details-content').classList.replace('scale-100', 'scale-95');
+            setTimeout(() => { document.getElementById('tx-details-modal').classList.replace('flex', 'hidden'); selectedTxIdForDetails = null; }, 300);
+        };
+
+        window.confirmDeleteTransaction = function(id, fromDetails = false) {
+            txToDeleteId = id;
+            isDeletingFromDetails = fromDetails;
+            
+            const m = document.getElementById('delete-confirm-modal'); m.classList.remove('hidden'); m.classList.add('flex'); void m.offsetWidth; 
+            document.getElementById('delete-confirm-backdrop').classList.replace('opacity-0', 'opacity-100');
+            document.getElementById('delete-confirm-content').classList.replace('opacity-0', 'opacity-100');
+            document.getElementById('delete-confirm-content').classList.replace('scale-95', 'scale-100');
+            document.getElementById('delete-confirm-content').classList.add('modal-popup');
+        };
+
+        window.closeDeleteConfirmModal = function() {
+            document.getElementById('delete-confirm-backdrop').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('delete-confirm-content').classList.replace('opacity-100', 'opacity-0');
+            document.getElementById('delete-confirm-content').classList.replace('scale-100', 'scale-95');
+            setTimeout(() => { 
+                document.getElementById('delete-confirm-modal').classList.replace('flex', 'hidden');
+                document.getElementById('btn-confirm-delete').disabled = false;
+                document.getElementById('btn-confirm-delete').innerHTML = `ລຶບເລີຍ`;
+                txToDeleteId = null;
+            }, 300);
+        };
+        
+        window.executeDeleteTransaction = async function() {
+            if(!txToDeleteId) return;
+            const btn = document.getElementById('btn-confirm-delete');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ກຳລັງລຶບ...`;
+            
+            await deleteTransaction(txToDeleteId);
+            
+            if (isDeletingFromDetails) {
+                closeTxDetailsModal();
+            }
+            closeDeleteConfirmModal();
+        };
+
         window.approveRequest = async function(txId) {
             const tx = transactions.find(t => t.firebaseId === txId); if (!tx) return;
             const approverStats = calculateBalances(currentUserProfile.uid);
@@ -1791,69 +1944,6 @@
             }, 300); 
         };
 
-        window.openTxDetails = function(id) {
-            const t = transactions.find(tx => tx.firebaseId === id); if (!t) return; selectedTxIdForDetails = id;
-            const body = document.getElementById('tx-details-body'); const actions = document.getElementById('tx-details-actions');
-            let icon = 'fa-circle', bgClass = '', amountColor = '', sign = '', typeLabel = ''; let catName = 'ທົ່ວໄປ';
-            for (const key in activeCategories) { const found = activeCategories[key]?.find(c => c.id === t.category); if (found) { catName = found.name; icon = found.icon; break; } }
-            
-            if (t.type === 'income') { bgClass = 'bg-emerald-100 text-emerald-600'; amountColor = 'text-emerald-500'; sign = '+'; typeLabel = 'ລາຍຮັບ'; }
-            else if (t.type === 'expense') { bgClass = 'bg-rose-100 text-rose-600'; amountColor = 'text-rose-500'; sign = '-'; typeLabel = 'ລາຍຈ່າຍ'; }
-            else if (t.type === 'debt') { bgClass = 'bg-orange-100 text-orange-600'; amountColor = 'text-orange-500'; sign = 'ໜີ້ເພີ່ມ '; typeLabel = 'ສ້າງໜີ້'; }
-            else if (t.type === 'pay_debt') { icon = 'fa-handshake-angle'; bgClass = 'bg-teal-100 text-teal-600'; amountColor = 'text-teal-500'; sign = '-'; typeLabel = 'ຊຳລະໜີ້'; }
-            else if (t.type === 'transfer_out') { icon = 'fa-arrow-right-from-bracket'; bgClass = 'bg-blue-100 text-blue-600'; amountColor = 'text-rose-500'; sign = '-'; typeLabel = `ໂອນເງິນອອກ`; }
-            else if (t.type === 'transfer_in') { icon = 'fa-arrow-right-to-bracket'; bgClass = 'bg-blue-100 text-blue-600'; amountColor = 'text-emerald-500'; sign = '+'; typeLabel = `ຮັບເງິນໂອນ`; }
-
-            const dateObj = new Date(t.date);
-            const dateStr = dateObj.toLocaleDateString('lo-LA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            let timeStr = "ບໍ່ໄດ້ລະບຸ";
-            if (t.date.includes('T')) timeStr = dateObj.toLocaleTimeString('lo-LA', { hour: '2-digit', minute:'2-digit' });
-            else if (t.timestamp) timeStr = new Date(t.timestamp).toLocaleTimeString('lo-LA', { hour: '2-digit', minute:'2-digit' });
-
-            const ownerName = familyMembers[t.owner]?.name || 'ສະມາຊິກບໍ່ພົບ';
-            let extraInfo = '';
-            if (t.type === 'transfer_out' && t.target) extraInfo = `<div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ຜູ້ຮັບໂອນ</span><span class="text-sm font-semibold text-slate-700">${familyMembers[t.target]?.name || 'ບໍ່ພົບຂໍ້ມູນ'}</span></div>`;
-            else if (t.type === 'transfer_in' && t.source) extraInfo = `<div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ຜູ້ໂອນ</span><span class="text-sm font-semibold text-slate-700">${familyMembers[t.source]?.name || 'ບໍ່ພົບຂໍ້ມູນ'}</span></div>`;
-
-            body.innerHTML = `
-                <div class="flex flex-col items-center justify-center mb-6">
-                    <div class="w-16 h-16 rounded-full flex items-center justify-center mb-3 ${bgClass} shadow-sm border border-white"><i class="fa-solid ${icon} text-2xl"></i></div>
-                    <h3 class="text-3xl font-bold ${amountColor}">${sign}${formatMoney(t.amount)}</h3>
-                    <span class="text-xs text-slate-500 mt-1 px-2 py-1 bg-slate-100 rounded-full font-medium">${typeLabel}</span>
-                </div>
-                <div class="space-y-4">
-                    <div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-regular fa-calendar"></i></div><div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ວັນທີ</span><span class="text-sm font-semibold text-slate-700">${dateStr}</span></div></div>
-                    <div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-regular fa-clock"></i></div><div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ເວລາ</span><span class="text-sm font-semibold text-slate-700">${timeStr}</span></div></div>
-                    <div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-solid fa-layer-group"></i></div><div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ໝວດໝູ່</span><span class="text-sm font-semibold text-slate-700">${catName}</span></div></div>
-                    <div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-regular fa-user"></i></div><div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ບັນທຶກໂດຍ</span><span class="text-sm font-semibold text-slate-700">${ownerName}</span></div></div>
-                    ${extraInfo}
-                    <div class="flex items-start gap-3"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-solid fa-align-left"></i></div><div class="flex flex-col w-full"><span class="text-[10px] text-slate-400 font-medium">ບັນທຶກເພີ່ມເຕີມ</span><span class="text-sm font-medium text-slate-600 bg-slate-50 p-2 rounded-lg mt-1 w-full border border-slate-100 ${!t.note ? 'italic text-slate-400' : ''}">${t.note || 'ບໍ່ມີບັນທຶກເພີ່ມເຕີມ'}</span></div></div>
-                    ${t.image ? `<div class="flex items-start gap-3 mt-4"><div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center shrink-0 text-slate-400"><i class="fa-regular fa-image"></i></div><div class="flex flex-col w-full"><span class="text-[10px] text-slate-400 font-medium mb-1">ຮູບພາບ/ສະລິບ</span><img src="${t.image}" onclick="window.open('${t.image}', '_blank')" class="w-full h-auto rounded-xl border border-slate-200 cursor-pointer hover:opacity-90 transition shadow-sm"></div></div>` : ''}
-                </div>`;
-
-            const txDateForCheck = new Date(t.date); const todayForCheck = new Date();
-            const isEditable = (txDateForCheck.getDate() === todayForCheck.getDate() && txDateForCheck.getMonth() === todayForCheck.getMonth() && txDateForCheck.getFullYear() === todayForCheck.getFullYear());
-
-            let actionHtml = `<button onclick="closeTxDetailsModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-medium transition text-sm">ປິດ</button>`;
-            if (t.owner === currentUserProfile?.uid && isEditable) actionHtml += `<button onclick="deleteTransactionFromDetails('${t.firebaseId}')" class="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 font-medium transition flex items-center gap-2 shadow-sm text-sm"><i class="fa-solid fa-trash"></i> ລຶບລາຍການນີ້</button>`;
-            else if (t.owner === currentUserProfile?.uid && !isEditable) actionHtml += `<span class="text-xs text-slate-400 font-medium px-2 py-2 flex items-center gap-1"><i class="fa-solid fa-lock"></i> ບໍ່ສາມາດແກ້ໄຂຍ້ອນຫຼັງໄດ້</span>`;
-            actions.innerHTML = actionHtml;
-
-            const m = document.getElementById('tx-details-modal'); m.classList.remove('hidden'); m.classList.add('flex'); void m.offsetWidth; 
-            document.getElementById('tx-details-backdrop').classList.replace('opacity-0', 'opacity-100');
-            document.getElementById('tx-details-content').classList.replace('opacity-0', 'opacity-100');
-            document.getElementById('tx-details-content').classList.replace('scale-95', 'scale-100');
-        };
-
-        window.closeTxDetailsModal = function() {
-            document.getElementById('tx-details-backdrop').classList.replace('opacity-100', 'opacity-0');
-            document.getElementById('tx-details-content').classList.replace('opacity-100', 'opacity-0');
-            document.getElementById('tx-details-content').classList.replace('scale-100', 'scale-95');
-            setTimeout(() => { document.getElementById('tx-details-modal').classList.replace('flex', 'hidden'); selectedTxIdForDetails = null; }, 300);
-        };
-        
-        window.deleteTransactionFromDetails = async function(id) { await deleteTransaction(id); closeTxDetailsModal(); }
-
         function calculateBalances(userId) {
             let totalIn = 0, totalEx = 0, totalDebt = 0, mIn = 0, mEx = 0, mDebt = 0;
             const relevantTx = transactions.filter(t => { if (t.status !== 'completed') return false; if (userId === 'family') return true; return t.owner === userId || t.source === userId || t.target === userId; });
@@ -1862,8 +1952,9 @@
                 const isMyIncome = t.owner === userId && t.type === 'income'; const isTransferToMe = t.type === 'transfer_in' && t.owner === userId;
                 const isMyExpense = t.owner === userId && t.type === 'expense'; const isTransferFromMe = t.type === 'transfer_out' && t.owner === userId;
 
-                const countAsIncome = userId === 'family' ? (t.type === 'income' || t.type === 'transfer_in') : (isMyIncome || isTransferToMe);
-                const countAsExpense = userId === 'family' ? (t.type === 'expense' || t.type === 'transfer_out') : (isMyExpense || isTransferFromMe);
+                // แก้ไข: ถ้าเป็นมุมมองครอบครัว (family) จะไม่นำการโอนเงิน (transfer) มาบวกเป็นรายได้หรือรายจ่าย
+                const countAsIncome = userId === 'family' ? (t.type === 'income') : (isMyIncome || isTransferToMe);
+                const countAsExpense = userId === 'family' ? (t.type === 'expense') : (isMyExpense || isTransferFromMe);
                 const countAsDebt = (userId === 'family' || t.owner === userId) && t.type === 'debt';
                 const isPayDebt = (userId === 'family' || t.owner === userId) && t.type === 'pay_debt';
                 
@@ -1903,26 +1994,35 @@
             document.getElementById('expense-amount').textContent = formatMoney(stats.expense);
             document.getElementById('debt-amount').textContent = formatMoney(stats.debt);
 
-            // --- ຈັດການສ່ວນສະແດງການເຂົ້າເບິ່ງມື້ນີ້ (Seen Status) ---
-            const activeList = document.getElementById('active-members-list');
-            activeList.innerHTML = '';
-            const todayStr = new Date().toDateString();
-            
-            Object.values(familyMembers).forEach(member => {
-                const lastActiveDate = member.lastActive ? new Date(member.lastActive).toDateString() : '';
-                const isOnlineToday = lastActiveDate === todayStr;
-                const badgeColor = isOnlineToday ? 'bg-emerald-500' : 'bg-slate-300';
-                
-                activeList.innerHTML += `
-                    <div class="relative group cursor-pointer" title="${member.name} ${isOnlineToday ? '(ເບິ່ງແລ້ວມື້ນີ້)' : '(ຍັງບໍ່ເບິ່ງມື້ນີ້)'}">
-                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 shadow-sm border border-white">
-                            <i class="fa-solid ${member.icon || 'fa-user'} text-xs"></i>
+            // Active members logic
+            if (currentView === 'family') {
+                const activeContainer = document.getElementById('active-members-container');
+                const activeList = document.getElementById('active-members-list');
+                activeList.innerHTML = '';
+                let activeCount = 0;
+                const todayStr = new Date().toISOString().split('T')[0];
+
+                Object.values(familyMembers).forEach(member => {
+                    const isActive = member.lastActiveDate === todayStr;
+                    const statusDot = isActive ? `<div class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></div>` : `<div class="absolute bottom-0 right-0 w-3 h-3 bg-slate-300 border-2 border-white rounded-full"></div>`;
+                    
+                    activeList.innerHTML += `
+                        <div class="flex flex-col items-center gap-1 min-w-max">
+                            <div class="relative">
+                                <div class="w-10 h-10 rounded-full ${isActive ? 'bg-rose-100 text-rose-500' : 'bg-slate-100 text-slate-400'} flex items-center justify-center text-sm shadow-sm"><i class="fa-solid ${member.icon || 'fa-user'}"></i></div>
+                                ${statusDot}
+                            </div>
+                            <span class="text-[10px] font-medium ${isActive ? 'text-slate-700' : 'text-slate-400'}">${member.name}</span>
                         </div>
-                        <div class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white ${badgeColor} ${isOnlineToday ? 'animate-pulse' : ''}"></div>
-                    </div>
-                `;
-            });
-            // -----------------------------------------------------
+                    `;
+                    activeCount++;
+                });
+
+                if (activeCount > 0) activeContainer.classList.remove('hidden');
+                else activeContainer.classList.add('hidden');
+            } else {
+                document.getElementById('active-members-container').classList.add('hidden');
+            }
 
             const budgetContainer = document.getElementById('budget-progress-container');
             if (familyMonthlyBudget > 0 && currentView === 'family' && (currentTimeFilter === 'month' || currentTimeFilter === 'custom')) {
@@ -1948,7 +2048,8 @@
             if (currentView === 'family' && currentUserProfile.role === 'parent') {
                 famSum.classList.remove('hidden'); const memList = document.getElementById('member-spending-list'); memList.innerHTML = '';
                 Object.values(familyMembers).forEach(member => {
-                    const mEx = transactions.filter(t => t.owner === member.uid && t.status === 'completed' && (t.type === 'expense' || t.type === 'transfer_out' || t.type === 'pay_debt') && isTransactionInTimeframe(t.date)).reduce((sum, t) => sum + t.amount, 0);
+                    // แก้ไข: ไม่นับการโอนเงินออกไปรวมกับยอดใช้จ่ายสรุปรายบุคคล
+                    const mEx = transactions.filter(t => t.owner === member.uid && t.status === 'completed' && (t.type === 'expense' || t.type === 'pay_debt') && isTransactionInTimeframe(t.date)).reduce((sum, t) => sum + t.amount, 0);
                     memList.innerHTML += `
                     <div class="flex items-center gap-3 p-3 bg-rose-50 rounded-xl border border-rose-100">
                         <div class="w-10 h-10 rounded-full bg-white text-rose-500 shadow-sm flex items-center justify-center shrink-0"><i class="fa-solid ${member.icon || 'fa-user'}"></i></div>
@@ -2000,24 +2101,30 @@
 
             const displayTitle = prefix || catName; const ownerName = familyMembers[t.owner]?.name || 'ສະມາຊິກ';
             const badge = (currentView === 'family' || (currentUserProfile.role === 'parent' && t.owner !== currentUserProfile.uid)) ? `<span class="bg-rose-50 text-rose-500 border border-rose-100 text-[10px] px-1.5 py-0.5 rounded ml-1 font-medium">${ownerName}</span>` : '';
+            
+            const viewsBadge = (t.viewCount && t.viewCount > 0) ? `<span class="ml-1 text-blue-400 font-medium" title="ເຂົ້າເບິ່ງແລ້ວ ${t.viewCount} ຄັ້ງ">• <i class="fa-solid fa-eye text-[10px]"></i> ${t.viewCount}</span>` : '';
+            
             const dateObj = new Date(t.date); const dateStr = dateObj.toLocaleDateString('lo-LA', { day: 'numeric', month: 'short' });
             let timeStr = ""; if (t.date.includes('T')) timeStr = ` • ${dateObj.toLocaleTimeString('lo-LA', { hour: '2-digit', minute:'2-digit' })}`; else if (t.timestamp) timeStr = ` • ${new Date(t.timestamp).toLocaleTimeString('lo-LA', { hour: '2-digit', minute:'2-digit' })}`;
             const txDateForCheck = new Date(t.date); const todayForCheck = new Date(); const isEditable = (txDateForCheck.getDate() === todayForCheck.getDate() && txDateForCheck.getMonth() === todayForCheck.getMonth() && txDateForCheck.getFullYear() === todayForCheck.getFullYear());
-            const deleteBtn = (t.owner === currentUserProfile?.uid && isEditable) ? `<button onclick="event.stopPropagation(); deleteTransaction('${t.firebaseId}')" class="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-trash text-xs"></i></button>` : '';
+            const deleteBtn = (t.owner === currentUserProfile?.uid && isEditable) ? `<button onclick="event.stopPropagation(); confirmDeleteTransaction('${t.firebaseId}', false)" class="text-slate-300 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-trash text-xs"></i></button>` : '';
 
-            // Use formatMoney for amounts here
             return `
             <li onclick="openTxDetails('${t.firebaseId}')" class="bg-white rounded-xl p-3 flex items-center justify-between border border-slate-100 hover:border-rose-100 hover:shadow-sm transition group cursor-pointer">
                 <div class="flex items-center gap-3 overflow-hidden flex-1">
                     <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${bgClass}"><i class="fa-solid ${icon}"></i></div>
-                    <div class="min-w-0"><h4 class="font-semibold text-slate-800 text-sm truncate">${displayTitle} ${badge}</h4><div class="text-[11px] text-slate-500 truncate">${dateStr}${timeStr} ${t.note ? '• '+t.note : ''}</div></div>
+                    <div class="min-w-0"><h4 class="font-semibold text-slate-800 text-sm truncate">${displayTitle} ${badge}</h4><div class="text-[11px] text-slate-500 truncate">${dateStr}${timeStr} ${t.note ? '• '+t.note : ''} ${viewsBadge}</div></div>
                 </div>
                 <div class="flex items-center gap-2 pl-2 shrink-0"><span class="font-bold ${amountColor} text-sm whitespace-nowrap">${sign}${formatMoney(t.amount)}</span>${deleteBtn}</div>
             </li>`;
         }
 
         function updateChart(compTx) {
-            const ex = compTx.filter(t => { if (currentUserProfile.role === 'child') return (t.type === 'expense' || t.type === 'transfer_out' || t.type === 'pay_debt') && t.owner === currentUserProfile.uid; else return t.type === 'expense' || t.type === 'transfer_out' || t.type === 'pay_debt'; });
+            const ex = compTx.filter(t => { 
+                // แก้ไข: ไม่นำการโอนเงินมาคิดในกราฟของครอบครัว
+                if (currentView === 'family') return t.type === 'expense' || t.type === 'pay_debt';
+                else return (t.type === 'expense' || t.type === 'transfer_out' || t.type === 'pay_debt') && t.owner === currentView; 
+            });
             const breakdownList = document.getElementById('expense-breakdown-list');
 
             if (ex.length === 0) {
@@ -2059,6 +2166,9 @@
             incContainer.innerHTML = ''; expContainer.innerHTML = ''; const incTotals = {}; const expTotals = {}; let hasData = false;
 
             compTx.forEach(t => {
+                // แก้ไข: ไม่นำการโอนเงินมาคิดในหน้าหมวดหมู่ยอดฮิตของครอบครัว
+                if (currentView === 'family' && (t.type === 'transfer_in' || t.type === 'transfer_out')) return; 
+
                 let catName = 'ອື່ນໆ'; let icon = 'fa-circle'; let foundName = null, foundIcon = null;
                 for (const key in activeCategories) { const found = activeCategories[key]?.find(c => c.id === t.category); if (found) { foundName = found.name; foundIcon = found.icon; break; } }
                 if (t.type === 'income' || t.type === 'transfer_in') {
@@ -2088,7 +2198,7 @@
         function showToast(msg, type) {
             const c = document.getElementById('toast-container'); const t = document.createElement('div');
             const icon = type === 'success' ? 'fa-check text-emerald-500' : type === 'danger' ? 'fa-xmark text-rose-500' : 'fa-info text-blue-500';
-            t.className = `toast-enter flex items-center gap-2 bg-white shadow-lg rounded-xl p-3 border border-slate-100`;
+            t.className = `toast-enter flex items-center gap-2 bg-white shadow-lg rounded-xl p-3 border border-slate-100 z-[110] relative`;
             t.innerHTML = `<i class="fa-solid ${icon}"></i> <span class="text-sm font-medium text-slate-700">${msg}</span>`;
             c.appendChild(t); setTimeout(() => { t.classList.replace('toast-enter', 'toast-exit'); setTimeout(() => t.remove(), 300); }, 3000);
         }
