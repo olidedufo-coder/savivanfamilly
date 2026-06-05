@@ -41,7 +41,7 @@
                 <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm border border-rose-100">
                     <i class="fa-solid fa-heart text-3xl"></i>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-800" id="auth-title">ຍິນດີຕ້ອນຮັບ</h2>
+                <h2 class="text-2xl font-bold text-slate-800" id="auth-title">ເຂົ້າສູ່ລະບົບ</h2>
                 <p class="text-sm text-slate-500 mt-1">ບັນຊີຄອບຄົວທີ່ແສນອົບອຸ່ນ 🏡</p>
             </div>
             
@@ -70,10 +70,6 @@
                 <button type="submit" id="auth-btn" class="w-full bg-rose-500 text-white font-bold py-3.5 rounded-xl hover:bg-rose-600 transition shadow-lg shadow-rose-500/30 flex justify-center items-center gap-2 mt-4">
                     <span>ເຂົ້າສູ່ລະບົບ</span>
                 </button>
-                
-                <p class="text-center text-xs text-slate-400 mt-4">
-                    <i class="fa-solid fa-circle-info"></i> ລະບົບຈະສ້າງບັນຊີໃຫ້ອັດຕະໂນມັດຖ້າຍັງບໍ່ມີ
-                </p>
             </form>
 
             <div id="permission-error-msg" class="hidden mt-6 p-4 bg-orange-50 border border-orange-200 rounded-xl text-sm text-orange-700 text-left shadow-sm">
@@ -186,6 +182,7 @@
                         <div class="flex flex-wrap items-center gap-2">
                             <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-100 shadow-sm text-rose-500">
                                 <i class="fa-regular fa-calendar"></i>
+                                <!-- Default Changed to today -->
                                 <select id="time-filter" onchange="changeTimeFilter(this.value)" class="bg-transparent text-sm font-medium text-slate-700 outline-none cursor-pointer">
                                     <option value="today" selected>ມື້ນີ້</option>
                                     <option value="week">ອາທິດນີ້</option>
@@ -217,15 +214,15 @@
                             <h3 class="text-xl sm:text-2xl font-bold text-slate-800" id="balance-amount">0</h3>
                         </div>
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-5 relative overflow-hidden group">
-                            <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ລາຍຮັບ <span id="income-label-time" class="text-emerald-500 text-[10px] bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded ml-1">ເດືອນນີ້</span></p>
+                            <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ລາຍຮັບ <span id="income-label-time" class="text-emerald-500 text-[10px] bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded ml-1">ມື້ນີ້</span></p>
                             <h3 class="text-xl sm:text-2xl font-bold text-emerald-500" id="income-amount">0</h3>
                         </div>
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-5 relative overflow-hidden group">
-                            <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ລາຍຈ່າຍ <span id="expense-label-time" class="text-rose-500 text-[10px] bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded ml-1">ເດືອນນີ້</span></p>
+                            <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ລາຍຈ່າຍ <span id="expense-label-time" class="text-rose-500 text-[10px] bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded ml-1">ມື້ນີ້</span></p>
                             <h3 class="text-xl sm:text-2xl font-bold text-rose-500" id="expense-amount">0</h3>
                         </div>
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-5 relative overflow-hidden group border-l-4 border-l-orange-400">
-                            <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ໜີ້/ຄ້າງຈ່າຍ <span id="debt-label-time" class="text-orange-500 text-[10px] bg-orange-50 border border-orange-100 px-1.5 py-0.5 rounded ml-1">ເດືອນນີ້</span></p>
+                            <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ໜີ້/ຄ້າງຈ່າຍ <span id="debt-label-time" class="text-orange-500 text-[10px] bg-orange-50 border border-orange-100 px-1.5 py-0.5 rounded ml-1">ມື້ນີ້</span></p>
                             <h3 class="text-xl sm:text-2xl font-bold text-orange-500" id="debt-amount">0</h3>
                         </div>
                     </div>
@@ -280,7 +277,7 @@
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="dashboard-bottom-section">
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 h-fit">
                             <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-chart-pie text-rose-400"></i> ສັດສ່ວນລາຍຈ່າຍ (ເດືອນນີ້)
+                                <i class="fa-solid fa-chart-pie text-rose-400"></i> ສັດສ່ວນລາຍຈ່າຍ
                             </h2>
                             <div class="relative h-64 w-full flex justify-center items-center">
                                 <canvas id="expenseChart"></canvas>
@@ -673,7 +670,7 @@
     <!-- ================= 3. JAVASCRIPT & FIREBASE ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, getDocs, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         let app, auth, db, appId;
@@ -692,7 +689,7 @@
         
         let currentMonthFilter = new Date().toISOString().slice(0, 7);
         let currentDateFilter = new Date().toISOString().split('T')[0];
-        let currentTimeFilter = 'today';
+        let currentTimeFilter = 'today'; // DEFAULT TO TODAY
         let dashboardStartDate = ''; 
         let dashboardEndDate = '';   
         let currentImageBase64 = null;
@@ -733,19 +730,8 @@
         };
         let activeCategories = JSON.parse(JSON.stringify(defaultCategories));
         
-        // ອັບເດດຊຸດສີໃໝ່: ໂທນສີ Rose/Coral ໄລ່ລະດັບຄວາມເຂັ້ມອ່ອນ (ສະບາຍຕາ, ບໍ່ຕັດກັນແຮງ)
-        // ສີທຳອິດ (ເຂັ້ມສຸດ) ສຳລັບລາຍການທີ່ຈ່າຍຫຼາຍສຸດ ໄລ່ລົງໄປຫາສີອ່ອນສຳລັບລາຍການຈ່າຍໜ້ອຍ
-        const chartColors = [
-            '#e11d48', // Rose-600 (Dark)
-            '#f43f5e', // Rose-500
-            '#fb7185', // Rose-400
-            '#fda4af', // Rose-300
-            '#fecdd3', // Rose-200
-            '#ffe4e6', // Rose-100 (Light)
-            '#ff8a65', // Muted Coral
-            '#ffab91', // Light Coral
-            '#ffccbc'  // Very Light Coral
-        ];
+        // Analogous Rose/Coral Tone Colors for Chart
+        const chartColors = ['#e11d48', '#f43f5e', '#fb7185', '#fda4af', '#fecdd3', '#ffe4e6', '#fff1f2'];
 
         const initFirebase = async () => {
              const firebaseConfig = {
@@ -769,6 +755,8 @@
                         let userDoc = await getDoc(userDocRef);
                         let userData;
                         if (!userDoc.exists()) {
+                            // If the user managed to login but has no profile document, create one
+                            // This usually shouldn't happen if they are created via admin panel first
                             const membersSnap = await getDocs(collection(db, 'families', DEFAULT_FAMILY_ID, 'members'));
                             const isFirstUser = membersSnap.empty; 
                             userData = { name: user.email.split('@')[0], role: isFirstUser ? 'parent' : 'child', icon: isFirstUser ? 'fa-user-tie' : 'fa-child', email: user.email };
@@ -782,7 +770,7 @@
                         startDataListeners();
                         showAppScreen();
                         applyRoleRestrictions();
-                        updateVisibilityIcon(); // ໂຫຼດໄອຄອນຕາມຄ່າເບື້ອງຕົ້ນ
+                        updateVisibilityIcon();
                     } catch (e) {
                         console.error("ໂຫຼດຂໍ້ມູນລົ້ມເຫຼວ:", e);
                         if (e.message.includes('Missing or insufficient permissions') || e.code === 'permission-denied') {
@@ -801,7 +789,7 @@
             updateVisibilityIcon();
             updateUI();
             if (currentPage === 'transactions') renderTransactionList();
-            if (selectedTxIdForDetails) openTxDetails(selectedTxIdForDetails); // ອັບເດດໃນໜ້າລາຍລະອຽດຖ້າເປີດຢູ່
+            if (selectedTxIdForDetails) openTxDetails(selectedTxIdForDetails); 
         };
 
         function updateVisibilityIcon() {
@@ -827,18 +815,18 @@
             const pass = document.getElementById('login-password').value.trim();
             btn.disabled = true; btn.innerHTML = `<div class="loader w-4 h-4 border-white border-t-white/30 inline-block align-middle mr-2"></div> ກຳລັງກວດສອບ...`;
             document.getElementById('permission-error-msg').classList.add('hidden');
-            try { await signInWithEmailAndPassword(auth, email, pass); btn.innerHTML = `<div class="loader w-4 h-4 border-white border-t-white/30 inline-block align-middle mr-2"></div> ກຳລັງໂຫຼດຂໍ້ມູນ...`;
+            
+            try { 
+                await signInWithEmailAndPassword(auth, email, pass); 
+                btn.innerHTML = `<div class="loader w-4 h-4 border-white border-t-white/30 inline-block align-middle mr-2"></div> ກຳລັງໂຫຼດຂໍ້ມູນ...`;
             } catch (error) {
-                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
-                    try { btn.innerHTML = `<div class="loader w-4 h-4 border-white border-t-white/30 inline-block align-middle mr-2"></div> ກຳລັງສ້າງບັນຊີໃໝ່...`;
-                        await createUserWithEmailAndPassword(auth, email, pass); btn.innerHTML = `<div class="loader w-4 h-4 border-white border-t-white/30 inline-block align-middle mr-2"></div> ກຳລັງໂຫຼດຂໍ້ມູນ...`;
-                    } catch (regError) {
-                        if (regError.code === 'auth/email-already-in-use') showToast("ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ", "danger");
-                        else if (regError.code === 'auth/weak-password') showToast("ລະຫັດຜ່ານຕ້ອງມີຢ່າງໜ້ອຍ 6 ຕົວ", "danger");
-                        else showToast("ຜິດພາດ: " + regError.message, "danger");
-                        btn.disabled = false; btn.innerHTML = `<span>ເຂົ້າສູ່ລະບົບ</span>`;
-                    }
-                } else { showToast("ຜິດພາດ: " + error.message, "danger"); btn.disabled = false; btn.innerHTML = `<span>ເຂົ້າສູ່ລະບົບ</span>`; }
+                // Remove auto-registration logic. Just show error.
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    showToast("ອີເມວ ຫຼື ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ (ບໍ່ພົບບັນຊີນີ້)", "danger");
+                } else { 
+                    showToast("ຜິດພາດ: " + error.message, "danger"); 
+                }
+                btn.disabled = false; btn.innerHTML = `<span>ເຂົ້າສູ່ລະບົບ</span>`; 
             }
         });
 
@@ -1642,54 +1630,16 @@
                 let html = '<div class="mt-6 border-t border-slate-100 pt-5"><h3 class="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><i class="fa-solid fa-list-ul text-rose-400"></i> ລາຍລະອຽດການຈ່າຍ (ຈ່າຍຫຍັງຫຼາຍທີ່ສຸດ?)</h3>';
                 sortedTotals.forEach(([name, amount], index) => {
                     const percent = totalExpenseAmount > 0 ? ((amount / totalExpenseAmount) * 100).toFixed(1) : 0;
-                    // ສີໃນ list ຕ້ອງກົງກັບສີໃນກຣາຟ (ອ້າງອີງຕາມ index ທີ່ລຽງລຳດັບແລ້ວ)
                     const color = chartColors[index % chartColors.length];
                     html += `<div class="mb-4"><div class="flex justify-between items-end text-sm mb-1.5"><span class="font-semibold text-slate-700 flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color: ${color}"></span> ${name}</span><span class="text-slate-600 font-medium">₭${formatMoney(amount)} <span class="text-rose-500 font-bold ml-1 text-[11px] bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded shadow-sm">${percent}%</span></span></div><div class="w-full bg-slate-100 rounded-full h-2"><div class="h-2 rounded-full transition-all duration-500" style="width: ${percent}%; background-color: ${color}"></div></div></div>`;
                 }); html += '</div>'; breakdownList.innerHTML = html;
             }
 
-            const ctx = document.getElementById('expenseChart').getContext('2d'); 
-            const labels = sortedTotals.map(item => item[0]); 
-            const data = sortedTotals.map(item => item[1]);
-            
-            // ສ້າງ array ຂອງສີໃຫ້ພໍດີກັບຈຳນວນຂໍ້ມູນ
-            const bgColors = data.map((_, i) => chartColors[i % chartColors.length]);
-
-            if (expenseChartInstance) { 
-                expenseChartInstance.data.labels = labels; 
-                expenseChartInstance.data.datasets[0].data = data;
-                expenseChartInstance.data.datasets[0].backgroundColor = bgColors;
-                expenseChartInstance.update();
+            const ctx = document.getElementById('expenseChart').getContext('2d'); const labels = sortedTotals.map(item => item[0]); const data = sortedTotals.map(item => item[1]);
+            if (expenseChartInstance) { expenseChartInstance.data.labels = labels; expenseChartInstance.data.datasets[0].data = data; expenseChartInstance.update();
             } else {
-                expenseChartInstance = new Chart(ctx, { 
-                    type: 'doughnut', 
-                    data: { 
-                        labels: labels, 
-                        datasets: [{ 
-                            data: data, 
-                            backgroundColor: bgColors, 
-                            borderWidth: 2, // ເພີ່ມຂະໜາດຂອບ
-                            borderColor: '#ffffff', // ເພີ່ມສີຂອບເປັນສີຂາວ ເພື່ອແຍກແຕ່ລະສີໃຫ້ເບິ່ງງ່າຍຂຶ້ນ
-                            hoverOffset: 4 // ເວລາເອົາເມົ້າໄປຊີ້ ໃຫ້ກຣາຟເດັ້ງອອກມາໜ້ອຍໜຶ່ງ
-                        }] 
-                    }, 
-                    options: { 
-                        responsive: true, 
-                        maintainAspectRatio: false, 
-                        plugins: { 
-                            legend: { position: 'right', labels: { font: { family: "'Noto Sans Lao'" }, boxWidth: 12, padding: 15 } }, // ເພີ່ມໄລຍະຫ່າງຂອງຊື່
-                            tooltip: { 
-                                backgroundColor: 'rgba(255, 255, 255, 0.9)', // ປ່ຽນພື້ນຫຼັງ tooltip ເປັນສີຂາວ
-                                titleColor: '#1e293b',
-                                bodyColor: '#475569',
-                                borderColor: '#e2e8f0',
-                                borderWidth: 1,
-                                padding: 10,
-                                callbacks: { label: function(context) { return ' ' + context.label + ': ₭' + formatMoney(context.parsed); } } 
-                            } 
-                        }, 
-                        cutout: '65%' // ປັບຄວາມໜາຂອງວົງແຫວນ
-                    } 
+                expenseChartInstance = new Chart(ctx, { type: 'doughnut', data: { labels: labels, datasets: [{ data: data, backgroundColor: chartColors, borderWidth: 0, hoverOffset: 4 }] }, 
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { font: { family: "'Noto Sans Lao'" }, boxWidth: 12, color: '#475569' } }, tooltip: { backgroundColor: '#ffffff', titleColor: '#1e293b', bodyColor: '#475569', borderColor: '#e2e8f0', borderWidth: 1, padding: 10, displayColors: false, callbacks: { label: function(context) { return ' ' + context.label + ': ₭' + formatMoney(context.parsed); } } } }, cutout: '70%' } 
                 });
             }
         }
