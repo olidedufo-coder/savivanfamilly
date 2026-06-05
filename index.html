@@ -41,7 +41,7 @@
 </head>
 <body class="text-slate-800 font-sans flex overflow-hidden" style="height: 100dvh;">
 
-    <!-- ================= 1. ປ່ອງຢ້ຽມ AUTH (Email & Password Login) ================= -->
+    <!-- ================= 1. ປ່ອງຢ້ຽມ AUTH ================= -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex z-[100] transition-opacity duration-300 overflow-y-auto p-4">
         <div class="bg-white rounded-[2rem] shadow-2xl p-6 sm:p-8 w-full max-w-sm transform transition-all m-auto border-t-8 border-rose-400">
             <div class="text-center mb-6">
@@ -109,7 +109,6 @@
                 </div>
             </div>
 
-            <!-- ແຈ້ງເຕືອນມຸມມອງລູກ -->
             <div class="p-4 border-b border-slate-100 hidden bg-rose-50" id="child-view-notice-d">
                 <p class="text-xs text-rose-700 font-medium text-center"><i class="fa-solid fa-user-lock"></i> ສະແດງສະເພາະຂໍ້ມູນຂອງທ່ານ</p>
             </div>
@@ -117,6 +116,9 @@
             <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto no-scrollbar">
                 <button onclick="switchPage('dashboard')" id="nav-dashboard" class="w-full nav-item flex items-center gap-3 px-4 py-3 text-rose-600 bg-rose-50 rounded-xl font-medium transition">
                     <i class="fa-solid fa-chart-pie w-5"></i> ພາບລວມ
+                </button>
+                <button onclick="switchPage('history')" id="nav-history" class="w-full nav-item flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-rose-50 hover:text-rose-600 rounded-xl font-medium transition">
+                    <i class="fa-solid fa-clock-rotate-left w-5"></i> ຍ້ອນຫຼັງ
                 </button>
                 <button onclick="switchPage('transactions')" id="nav-transactions" class="w-full nav-item flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-rose-50 hover:text-rose-600 rounded-xl font-medium transition">
                     <i class="fa-solid fa-receipt w-5"></i> ລາຍການທັງໝົດ
@@ -151,7 +153,6 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-transparent">
             
             <!-- Header (Mobile) -->
@@ -166,11 +167,9 @@
                  <div id="child-view-notice-m" class="hidden text-sm font-bold text-rose-600">ບັນຊີຂອງຂ້ອຍ</div>
 
                 <div class="flex gap-2 items-center">
-                    <!-- AI Voice Button (Mobile) -->
                     <button ontouchstart="startVoiceRecording()" ontouchend="stopVoiceRecording()" ontouchcancel="stopVoiceRecording()" onmousedown="startVoiceRecording()" onmouseup="stopVoiceRecording()" id="mobile-voice-btn" class="w-9 h-9 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shadow-sm transition">
                         <i class="fa-solid fa-microphone text-sm"></i>
                     </button>
-
                     <button onclick="openCategoryModal()" id="mobile-admin-btn" class="hidden w-8 h-8 text-rose-400 flex items-center justify-center transition">
                         <i class="fa-solid fa-gear text-lg"></i>
                     </button>
@@ -187,18 +186,15 @@
                 <span class="font-medium text-sm" id="voice-status-text">ກຳລັງຟັງ... (ປ່ອຍປຸ່ມເມື່ອເວົ້າຈົບ)</span>
             </div>
 
-            <!-- Scroll Area -->
             <div class="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8 pb-24 md:pb-8 no-scrollbar" id="main-scroll-area">
                 
                 <!-- Dashboard Page -->
                 <div id="page-dashboard" class="page-section max-w-5xl mx-auto space-y-6 block animate-[fadeIn_0.3s_ease-out]">
                     
-                    <!-- NEW: ສະຖານະການອອນລາຍຂອງສະມາຊິກ (Seen Status) -->
+                    <!-- ສະຖານະການອອນລາຍຂອງສະມາຊິກ (Seen Status) -->
                     <div id="active-members-container" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 mb-4 hidden">
                         <h3 class="text-xs font-bold text-slate-500 mb-3 flex items-center gap-2"><i class="fa-solid fa-eye text-emerald-500"></i> ສະມາຊິກທີ່ຮັບຊາບຍອດເງິນແລ້ວມື້ນີ້</h3>
-                        <div class="flex gap-4 overflow-x-auto no-scrollbar" id="active-members-list">
-                            <!-- Injected by JS -->
-                        </div>
+                        <div class="flex gap-4 overflow-x-auto no-scrollbar" id="active-members-list"></div>
                     </div>
 
                     <!-- AI Advisor Banner -->
@@ -219,7 +215,6 @@
                         <div>
                             <div class="flex items-center gap-3">
                                 <h1 class="text-2xl font-bold text-slate-800">ພາບລວມການເງິນ</h1>
-                                <!-- Toggle Visibility Button -->
                                 <button onclick="toggleAmountVisibility()" class="text-slate-400 hover:text-rose-500 transition w-8 h-8 bg-white border border-slate-200 rounded-full flex items-center justify-center shadow-sm" title="ຊ່ອນ/ສະແດງຈຳນວນເງິນ">
                                     <i class="fa-solid fa-eye visibility-icon-class"></i>
                                 </button>
@@ -255,8 +250,9 @@
 
                     <!-- 4 Cards -->
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="dashboard-cards">
+                        <!-- Balance Card (Always shows Absolute Current Total) -->
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-5 relative overflow-hidden group">
-                            <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ຍອດເງິນລວມ</p>
+                            <p class="text-xs sm:text-sm text-slate-500 font-medium mb-1">ຍອດເງິນປັດຈຸບັນ</p>
                             <h3 class="text-xl sm:text-2xl font-bold text-slate-800" id="balance-amount">0</h3>
                         </div>
                         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-5 relative overflow-hidden group">
@@ -289,7 +285,7 @@
                         </div>
                     </div>
 
-                    <!-- Skeleton Dashbaord (Loading State) -->
+                    <!-- Skeleton Dashbaord -->
                     <div id="skeleton-dashboard" class="hidden">
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                             <div class="bg-white rounded-2xl border border-slate-100 p-5 h-24 animate-pulse"><div class="h-3 w-1/2 bg-slate-200 rounded mb-3"></div><div class="h-6 w-3/4 bg-slate-200 rounded"></div></div>
@@ -365,7 +361,57 @@
                     </div>
                 </div>
 
-                <!-- Transactions Page -->
+                <div id="page-history" class="page-section max-w-4xl mx-auto hidden space-y-6 animate-[fadeIn_0.3s_ease-out]">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-3 mb-2">
+                        <div>
+                            <div class="flex items-center gap-3">
+                                <h1 class="text-2xl font-bold text-slate-800">ຍອດເງິນຍ້ອນຫຼັງ</h1>
+                                <button onclick="toggleAmountVisibility()" class="text-slate-400 hover:text-rose-500 transition w-8 h-8 bg-white border border-slate-200 rounded-full flex items-center justify-center shadow-sm" title="ຊ່ອນ/ສະແດງຈຳນວນເງິນ">
+                                    <i class="fa-solid fa-eye visibility-icon-class"></i>
+                                </button>
+                            </div>
+                            <p class="text-slate-500 text-sm mt-1">ກວດເບິ່ງວ່າໃນອະດີດ ທ່ານມີເງິນເຫຼືອເທົ່າໃດ</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-rose-200 shadow-sm text-rose-600">
+                                <i class="fa-regular fa-calendar"></i>
+                                <span class="text-xs font-bold uppercase tracking-wider text-rose-400 mr-1">ເລືອກວັນທີ:</span>
+                                <input type="date" id="history-date-input" onchange="renderHistoryPage()" class="bg-transparent text-sm font-medium text-slate-700 outline-none cursor-pointer">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-800 text-white rounded-2xl shadow-lg p-6 relative overflow-hidden group mb-4 border-b-4 border-rose-500">
+                        <div class="absolute -right-4 -top-4 text-white/5 text-6xl"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                        <p class="text-xs sm:text-sm text-slate-300 font-medium mb-1 relative z-10">ຍອດເງິນຄົງເຫຼືອ (ສະສົມຈົນຮອດວັນທີເລືອກ)</p>
+                        <h3 class="text-3xl sm:text-4xl font-bold text-white relative z-10" id="hist-balance">0</h3>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 mb-6">
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 text-center">
+                            <p class="text-[10px] sm:text-xs text-slate-500 font-medium mb-1">ລາຍຮັບສະສົມທັງໝົດ</p>
+                            <h3 class="text-sm sm:text-lg font-bold text-emerald-500" id="hist-income">0</h3>
+                        </div>
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 text-center">
+                            <p class="text-[10px] sm:text-xs text-slate-500 font-medium mb-1">ລາຍຈ່າຍສະສົມທັງໝົດ</p>
+                            <h3 class="text-sm sm:text-lg font-bold text-rose-500" id="hist-expense">0</h3>
+                        </div>
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 text-center">
+                            <p class="text-[10px] sm:text-xs text-slate-500 font-medium mb-1">ໜີ້ສິນ/ຄ້າງຈ່າຍສະສົມ</p>
+                            <h3 class="text-sm sm:text-lg font-bold text-orange-500" id="hist-debt">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-list text-rose-400"></i> ລາຍການທີ່ເກີດຂຶ້ນໃນມື້ນັ້ນ
+                            </h2>
+                        </div>
+                        <ul id="history-transaction-list" class="space-y-3 flex-1 overflow-y-auto no-scrollbar"></ul>
+                    </div>
+                </div>
+
                 <div id="page-transactions" class="page-section max-w-4xl mx-auto hidden h-full flex flex-col animate-[fadeIn_0.3s_ease-out]">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 mt-2">
                         <div class="flex items-center gap-3">
@@ -456,10 +502,14 @@
 
         <!-- Mobile Nav -->
         <nav class="md:hidden fixed bottom-0 w-full bg-white/90 backdrop-blur-lg border-t border-slate-200 z-40 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
-            <div class="flex justify-around items-center h-16">
+            <div class="flex justify-between items-center h-16 px-2">
                 <button onclick="switchPage('dashboard')" id="nav-mobile-dashboard" class="nav-mobile-item flex-1 flex flex-col items-center justify-center gap-1 text-rose-500 transition">
                     <i class="fa-solid fa-chart-pie text-xl"></i>
                     <span class="text-[10px] font-medium">ພາບລວມ</span>
+                </button>
+                <button onclick="switchPage('history')" id="nav-mobile-history" class="nav-mobile-item flex-1 flex flex-col items-center justify-center gap-1 text-slate-400 transition">
+                    <i class="fa-solid fa-clock-rotate-left text-xl"></i>
+                    <span class="text-[10px] font-medium">ຍ້ອນຫຼັງ</span>
                 </button>
                 <button onclick="switchPage('transactions')" id="nav-mobile-transactions" class="nav-mobile-item flex-1 flex flex-col items-center justify-center gap-1 text-slate-400 transition">
                     <i class="fa-solid fa-receipt text-xl"></i>
@@ -781,7 +831,7 @@
         // ==========================================
         // 🚨 ຕັ້ງຄ່າ GEMINI API KEY ສຳລັບ AI 🚨
         // ==========================================
-        const GEMINI_API_KEY = "AIzaSyD......."; // <<< ใส่ API KEY ของคุณตรงนี้ก่อนเอาขึ้น Vercel
+        const GEMINI_API_KEY = ""; // ปล่อยว่างเพื่อใช้ Runtime Key ของ Canvas หรือใส่ Key ของคุณถ้านำไปใช้ข้างนอก
 
         let app, auth, db, appId;
         let txCollection = null;
@@ -875,7 +925,6 @@
                             await setDoc(userDocRef, userData);
                         } else { 
                             userData = userDoc.data(); 
-                            // Update last active date to today
                             if (userData.lastActiveDate !== todayStr) {
                                 await updateDoc(userDocRef, { lastActiveDate: todayStr });
                                 userData.lastActiveDate = todayStr;
@@ -947,7 +996,7 @@
             }
         }
 
-        // 1. AI ວິເຄາະສະລິບ (Receipt Scanner)
+        // 1. AI ວິເຄາະສະລິບ
         window.scanReceiptWithAI = async function() {
             if(!currentImageBase64) return;
             const btn = document.getElementById('btn-scan-receipt');
@@ -980,7 +1029,7 @@
             }
         };
 
-        // 2. AI ຈັດໝວດໝູ່ອັດຕະໂນມັດ (Auto-categorize on Note blur)
+        // 2. AI ຈັດໝວດໝູ່ອັດຕະໂນມັດ
         document.getElementById('note').addEventListener('blur', async function(e) {
             const note = this.value.trim();
             if(!note || note.length < 2) return;
@@ -1017,7 +1066,7 @@
             }
         });
 
-        // 3. AI ຜູ້ຊ່ວຍວິເຄາະການເງິນ (Financial Advisor)
+        // 3. AI ຜູ້ຊ່ວຍວິເຄາະການເງິນ
         window.askAIAdvisor = async function() {
             const btn = document.getElementById('ai-advisor-btn');
             const textEl = document.getElementById('ai-advisor-text');
@@ -1060,7 +1109,7 @@
             }
         };
 
-        // 4. ສັ່ງງານດ້ວຍສຽງ (Voice-to-Transaction)
+        // 4. ສັ່ງງານດ້ວຍສຽງ
         let mediaRecorder;
         let audioChunks = [];
         let isRecording = false;
@@ -1159,12 +1208,9 @@
             document.getElementById('desktop-voice-btn')?.classList.remove('mic-listening');
             document.getElementById('mobile-voice-btn')?.classList.remove('mic-listening');
         }
-        
         window.startVoiceRecording = startVoiceRecording;
         window.stopVoiceRecording = stopVoiceRecording;
-        // ==========================================
-        // END AI FUNCTIONS
-        // ==========================================
+
 
         // --- ຟັງຊັນສຳລັບຊ່ອນ/ສະແດງຈຳນວນເງິນ ---
         window.toggleAmountVisibility = function() {
@@ -1173,6 +1219,7 @@
             updateVisibilityIcon();
             updateUI();
             if (currentPage === 'transactions') renderTransactionList();
+            if (currentPage === 'history') window.renderHistoryPage();
             if (selectedTxIdForDetails) openTxDetails(selectedTxIdForDetails); 
         };
 
@@ -1187,7 +1234,6 @@
             if (isAmountHidden) return '***';
             return new Intl.NumberFormat('lo-LA').format(amount);
         }
-        // ----------------------------------------
 
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1310,14 +1356,11 @@
             loadTransactions(); 
         }
 
-        // Daily Notification function
         function showDailyWelcome() {
             const todayStr = new Date().toISOString().split('T')[0];
             const shownDate = sessionStorage.getItem('welcome_shown_date');
             
-            // Show only once per day per session
             if (shownDate !== todayStr) {
-                // Calculate today's stats for family
                 let tCount = 0, tIn = 0, tEx = 0;
                 transactions.forEach(t => {
                     if (t.status !== 'completed') return;
@@ -1326,7 +1369,7 @@
                     const isToday = txDate.getDate() === now.getDate() && txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
                     
                     if (isToday) {
-                        if (t.type === 'transfer_in' || t.type === 'transfer_out') return; // Ignore internal transfers for family overview
+                        if (t.type === 'transfer_in' || t.type === 'transfer_out') return; 
                         tCount++;
                         if (t.type === 'income') tIn += t.amount;
                         if (t.type === 'expense' || t.type === 'pay_debt') tEx += t.amount;
@@ -1367,6 +1410,7 @@
                 hideSkeletons();
                 updateUI();
                 if(currentPage === 'transactions') renderTransactionList();
+                if(currentPage === 'history') window.renderHistoryPage();
                 
                 if (isInitialLoad && transactions.length > 0) {
                     setTimeout(() => showDailyWelcome(), 500);
@@ -1416,6 +1460,7 @@
             document.getElementById('dashboard-subtitle').textContent = `ສະແດງຂໍ້ມູນຂອງ: ${name}`;
             updateUI();
             if(currentPage === 'transactions') renderTransactionList();
+            if(currentPage === 'history') window.renderHistoryPage();
         };
 
         document.getElementById('amount').addEventListener('input', function(e) {
@@ -1752,11 +1797,9 @@
             if (t.type === 'transfer_out' && t.target) extraInfo = `<div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ຜູ້ຮັບໂອນ</span><span class="text-sm font-semibold text-slate-700">${familyMembers[t.target]?.name || 'ບໍ່ພົບຂໍ້ມູນ'}</span></div>`;
             else if (t.type === 'transfer_in' && t.source) extraInfo = `<div class="flex flex-col"><span class="text-[10px] text-slate-400 font-medium">ຜູ້ໂອນ</span><span class="text-sm font-semibold text-slate-700">${familyMembers[t.source]?.name || 'ບໍ່ພົບຂໍ້ມູນ'}</span></div>`;
 
-            // --- NEW: ອັບເດດຍອດການເຂົ້າເບິ່ງໃນ Firebase ---
             const newViewCount = (t.viewCount || 0) + 1;
             updateDoc(doc(db, 'families', currentFamilyCode, 'transactions', id), { viewCount: newViewCount }).catch(e => console.log(e));
             t.viewCount = newViewCount; 
-            // ------------------------------------------
 
             body.innerHTML = `
                 <div class="flex flex-col items-center justify-center mb-6">
@@ -1826,10 +1869,7 @@
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ກຳລັງລຶບ...`;
             
             await deleteTransaction(txToDeleteId);
-            
-            if (isDeletingFromDetails) {
-                closeTxDetailsModal();
-            }
+            if (isDeletingFromDetails) closeTxDetailsModal();
             closeDeleteConfirmModal();
         };
 
@@ -1845,7 +1885,7 @@
             try {
                 if (tx.linkId) { const linkedTxs = transactions.filter(t => t.linkId === tx.linkId); for (let ltx of linkedTxs) await deleteDoc(doc(db, 'families', currentFamilyCode, 'transactions', ltx.firebaseId)); } 
                 else { await deleteDoc(doc(db, 'families', currentFamilyCode, 'transactions', id)); }
-                showToast('ລຶບລາຍການແລ້ວ', 'danger');
+                showToast('ລຶບລາຍການແລ້ວ', 'success');
             } catch(e) { showToast('ລຶບບໍ່ສຳເລັດ', 'danger'); }
         };
         window.rejectRequest = async function(id) { try { await deleteDoc(doc(db, 'families', currentFamilyCode, 'transactions', id)); showToast('ປະຕິເສດຄຳຂໍແລ້ວ', 'danger'); } catch (e) { showToast('ຜິດພາດ', 'danger'); } };
@@ -1932,18 +1972,102 @@
             document.querySelectorAll('.page-section').forEach(el => el.classList.replace('block', 'hidden'));
             document.getElementById('page-' + pageId).classList.replace('hidden', 'block');
             
+            document.getElementById('nav-dashboard').classList.toggle('text-rose-600', pageId === 'dashboard');
+            document.getElementById('nav-dashboard').classList.toggle('bg-rose-50', pageId === 'dashboard');
+            document.getElementById('nav-dashboard').classList.toggle('text-slate-500', pageId !== 'dashboard');
+            
+            document.getElementById('nav-history').classList.toggle('text-rose-600', pageId === 'history');
+            document.getElementById('nav-history').classList.toggle('bg-rose-50', pageId === 'history');
+            document.getElementById('nav-history').classList.toggle('text-slate-500', pageId !== 'history');
+
+            document.getElementById('nav-transactions').classList.toggle('text-rose-600', pageId === 'transactions');
+            document.getElementById('nav-transactions').classList.toggle('bg-rose-50', pageId === 'transactions');
+            document.getElementById('nav-transactions').classList.toggle('text-slate-500', pageId !== 'transactions');
+            
             document.getElementById('nav-mobile-dashboard').classList.toggle('text-rose-500', pageId === 'dashboard');
             document.getElementById('nav-mobile-dashboard').classList.toggle('text-slate-400', pageId !== 'dashboard');
+            document.getElementById('nav-mobile-history').classList.toggle('text-rose-500', pageId === 'history');
+            document.getElementById('nav-mobile-history').classList.toggle('text-slate-400', pageId !== 'history');
             document.getElementById('nav-mobile-transactions').classList.toggle('text-rose-500', pageId === 'transactions');
             document.getElementById('nav-mobile-transactions').classList.toggle('text-slate-400', pageId !== 'transactions');
             
             setTimeout(() => {
                 hideSkeletons();
                 if (pageId === 'dashboard') updateUI();
+                if (pageId === 'history') {
+                    if(!document.getElementById('history-date-input').value) {
+                        const now = new Date(); const tzOffset = now.getTimezoneOffset() * 60000;
+                        document.getElementById('history-date-input').value = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];
+                    }
+                    window.renderHistoryPage();
+                }
                 if (pageId === 'transactions') renderTransactionList();
             }, 300); 
         };
 
+        // --- NEW: History Page Logic ---
+        window.renderHistoryPage = function() {
+            const dateInput = document.getElementById('history-date-input').value;
+            if (!dateInput) return;
+            const endOfDay = new Date(dateInput).setHours(23, 59, 59, 999);
+            
+            let totalIn = 0, totalEx = 0, totalDebt = 0;
+            
+            const relevantTx = transactions.filter(t => {
+                if (t.status !== 'completed') return false;
+                if (currentView === 'family') return true;
+                return t.owner === currentView || t.source === currentView || t.target === currentView;
+            });
+
+            const txOnThisDate = [];
+
+            relevantTx.forEach(t => {
+                const txTime = new Date(t.date).getTime();
+                
+                // For historical balance (Cumulative up to the end of selected day)
+                if (txTime <= endOfDay) {
+                    const isMyIncome = t.owner === currentView && t.type === 'income';
+                    const isTransferToMe = t.type === 'transfer_in' && t.owner === currentView;
+                    const isMyExpense = t.owner === currentView && t.type === 'expense';
+                    const isTransferFromMe = t.type === 'transfer_out' && t.owner === currentView;
+
+                    const countAsIncome = currentView === 'family' ? (t.type === 'income') : (isMyIncome || isTransferToMe);
+                    const countAsExpense = currentView === 'family' ? (t.type === 'expense') : (isMyExpense || isTransferFromMe);
+                    const countAsDebt = (currentView === 'family' || t.owner === currentView) && t.type === 'debt';
+                    const isPayDebt = (currentView === 'family' || t.owner === currentView) && t.type === 'pay_debt';
+
+                    if (countAsIncome) totalIn += t.amount;
+                    if (countAsExpense) totalEx += t.amount;
+                    if (countAsDebt) totalDebt += t.amount;
+                    if (isPayDebt) { totalEx += t.amount; totalDebt -= t.amount; }
+                }
+                
+                // For transactions specifically ON the selected date
+                const txDateObj = new Date(t.date);
+                const selDateObj = new Date(dateInput);
+                if (txDateObj.getDate() === selDateObj.getDate() && txDateObj.getMonth() === selDateObj.getMonth() && txDateObj.getFullYear() === selDateObj.getFullYear()) {
+                    txOnThisDate.push(t);
+                }
+            });
+
+            document.getElementById('hist-balance').textContent = formatMoney(totalIn - totalEx);
+            document.getElementById('hist-income').textContent = formatMoney(totalIn);
+            document.getElementById('hist-expense').textContent = formatMoney(totalEx);
+            document.getElementById('hist-debt').textContent = formatMoney(totalDebt);
+            
+            // Render transactions on this date
+            const histList = document.getElementById('history-transaction-list');
+            histList.innerHTML = '';
+            if (txOnThisDate.length === 0) {
+                histList.innerHTML = '<div class="text-center py-8 text-slate-400 text-sm italic">ບໍ່ມີລາຍການໃນມື້ນີ້</div>';
+            } else {
+                txOnThisDate.sort((a,b) => b.timestamp - a.timestamp).forEach(t => {
+                    histList.innerHTML += generateTxHTML(t);
+                });
+            }
+        }
+
+        // Dashboard logic -> calculate balances ALWAYS calculates total for Absolute balance, but filters income/expense
         function calculateBalances(userId) {
             let totalIn = 0, totalEx = 0, totalDebt = 0, mIn = 0, mEx = 0, mDebt = 0;
             const relevantTx = transactions.filter(t => { if (t.status !== 'completed') return false; if (userId === 'family') return true; return t.owner === userId || t.source === userId || t.target === userId; });
@@ -1952,7 +2076,6 @@
                 const isMyIncome = t.owner === userId && t.type === 'income'; const isTransferToMe = t.type === 'transfer_in' && t.owner === userId;
                 const isMyExpense = t.owner === userId && t.type === 'expense'; const isTransferFromMe = t.type === 'transfer_out' && t.owner === userId;
 
-                // แก้ไข: ถ้าเป็นมุมมองครอบครัว (family) จะไม่นำการโอนเงิน (transfer) มาบวกเป็นรายได้หรือรายจ่าย
                 const countAsIncome = userId === 'family' ? (t.type === 'income') : (isMyIncome || isTransferToMe);
                 const countAsExpense = userId === 'family' ? (t.type === 'expense') : (isMyExpense || isTransferFromMe);
                 const countAsDebt = (userId === 'family' || t.owner === userId) && t.type === 'debt';
@@ -2025,7 +2148,6 @@
             }
 
             const budgetContainer = document.getElementById('budget-progress-container');
-            // ແກ້ໄຂເງື່ອນໄຂການສະແດງຜົນງົບປະມານ
             if (familyMonthlyBudget > 0 && currentView === 'family') {
                 budgetContainer.classList.remove('hidden');
                 let percent = (stats.expense / familyMonthlyBudget) * 100;
@@ -2049,7 +2171,6 @@
             if (currentView === 'family' && currentUserProfile.role === 'parent') {
                 famSum.classList.remove('hidden'); const memList = document.getElementById('member-spending-list'); memList.innerHTML = '';
                 Object.values(familyMembers).forEach(member => {
-                    // แก้ไข: ไม่นับการโอนเงินออกไปรวมกับยอดใช้จ่ายสรุปรายบุคคล
                     const mEx = transactions.filter(t => t.owner === member.uid && t.status === 'completed' && (t.type === 'expense' || t.type === 'pay_debt') && isTransactionInTimeframe(t.date)).reduce((sum, t) => sum + t.amount, 0);
                     memList.innerHTML += `
                     <div class="flex items-center gap-3 p-3 bg-rose-50 rounded-xl border border-rose-100">
@@ -2122,7 +2243,6 @@
 
         function updateChart(compTx) {
             const ex = compTx.filter(t => { 
-                // แก้ไข: ไม่นำการโอนเงินมาคิดในกราฟของครอบครัว
                 if (currentView === 'family') return t.type === 'expense' || t.type === 'pay_debt';
                 else return (t.type === 'expense' || t.type === 'transfer_out' || t.type === 'pay_debt') && t.owner === currentView; 
             });
@@ -2167,7 +2287,6 @@
             incContainer.innerHTML = ''; expContainer.innerHTML = ''; const incTotals = {}; const expTotals = {}; let hasData = false;
 
             compTx.forEach(t => {
-                // แก้ไข: ไม่นำการโอนเงินมาคิดในหน้าหมวดหมู่ยอดฮิตของครอบครัว
                 if (currentView === 'family' && (t.type === 'transfer_in' || t.type === 'transfer_out')) return; 
 
                 let catName = 'ອື່ນໆ'; let icon = 'fa-circle'; let foundName = null, foundIcon = null;
