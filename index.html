@@ -2025,13 +2025,14 @@
             }
 
             const budgetContainer = document.getElementById('budget-progress-container');
-            if (familyMonthlyBudget > 0 && currentView === 'family' && (currentTimeFilter === 'month' || currentTimeFilter === 'custom')) {
+            // ແກ້ໄຂເງື່ອນໄຂການສະແດງຜົນງົບປະມານ
+            if (familyMonthlyBudget > 0 && currentView === 'family') {
                 budgetContainer.classList.remove('hidden');
                 let percent = (stats.expense / familyMonthlyBudget) * 100;
                 let displayPercent = percent > 100 ? 100 : percent;
                 document.getElementById('budget-percent').textContent = percent.toFixed(1) + '%';
                 
-                document.getElementById('budget-status-text').textContent = `ໃຊ້ໄປແລ້ວ ${formatMoney(stats.expense)} ຈາກ ${formatMoney(familyMonthlyBudget)}`;
+                document.getElementById('budget-status-text').textContent = `ໃຊ້ໄປແລ້ວ ${formatMoney(stats.expense)} ຈາກ ${formatMoney(familyMonthlyBudget)} (${tLabel})`;
                 
                 const bar = document.getElementById('budget-bar');
                 bar.style.width = displayPercent + '%';
