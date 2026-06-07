@@ -868,7 +868,7 @@
         let txListStartDate = ''; 
         let txListEndDate = '';
         let txSearchKeyword = ''; 
-        let fetchLimit = 100; 
+        let renderLimit = 50; 
         
         let isAmountHidden = localStorage.getItem('familyMoneyTracker_hideAmount') === 'true';
 
@@ -1401,7 +1401,8 @@
         let isInitialLoad = true;
         function loadTransactions() {
             if(unsubscribeTx) unsubscribeTx();
-            const q = query(txCollection, orderBy("timestamp", "desc"), limit(fetchLimit));
+            // ແກ້ໄຂ: ເອົາ limit() ອອກ ເພື່ອດຶງຂໍ້ມູນທັງໝົດມາຄຳນວນຍອດເງິນລວມໃຫ້ຖືກຕ້ອງ 100% ບໍ່ໃຫ້ຍອດຕິດລົບ
+            const q = query(txCollection, orderBy("timestamp", "desc"));
             
             unsubscribeTx = onSnapshot(q, (snapshot) => {
                 transactions = [];
@@ -1416,24 +1417,16 @@
                     setTimeout(() => showDailyWelcome(), 500);
                     isInitialLoad = false;
                 }
-
-                const loadMoreBtn = document.getElementById('load-more-container');
-                if (snapshot.size >= fetchLimit) {
-                    loadMoreBtn.classList.remove('hidden');
-                } else {
-                    loadMoreBtn.classList.add('hidden');
-                }
             });
         }
 
         window.loadMoreTransactions = function() {
             const btn = document.getElementById('load-more-btn');
-            btn.disabled = true;
-            btn.classList.add('opacity-50', 'cursor-not-allowed');
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ກຳລັງໂຫຼດຂໍ້ມູນ...`;
-            
-            fetchLimit += 100; 
-            loadTransactions();
+            setTimeout(() => {
+                renderLimit += 50; 
+                renderTransactionList();
+            }, 300);
         }
 
         function populateUserDropdowns() {
@@ -1512,6 +1505,7 @@
             const emptyState = document.getElementById('empty-state');
             fList.innerHTML = '';
             
+            const loadMoreBtnContainer = document.getElementById('load-more-container');
             const loadMoreBtn = document.getElementById('load-more-btn');
             if(loadMoreBtn) {
                 loadMoreBtn.disabled = false;
@@ -1554,6 +1548,15 @@
                 return true;
             }).sort((a, b) => b.timestamp - a.timestamp);
 
+            // ໃຊ້ renderLimit ເພື່ອຈຳກັດການສະແດງຜົນໃນໜ້າຈໍແທນ ເພື່ອບໍ່ໃຫ້ແອັບຄ້າງ
+            const txToRender = filteredTx.slice(0, renderLimit);
+
+            if (filteredTx.length > renderLimit) {
+                loadMoreBtnContainer.classList.remove('hidden');
+            } else {
+                loadMoreBtnContainer.classList.add('hidden');
+            }
+
             if (filteredTx.length === 0) {
                 emptyState.classList.remove('hidden');
                 let text = "ຍັງບໍ່ມີລາຍການ";
@@ -1562,7 +1565,7 @@
             } else {
                 emptyState.classList.add('hidden');
                 let currentDate = '';
-                filteredTx.forEach(t => {
+                txToRender.forEach(t => {
                     const dObj = new Date(t.date);
                     const dateStr = dObj.toLocaleDateString('lo-LA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
                     if (dateStr !== currentDate) {
